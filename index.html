@@ -20,6 +20,13 @@ a{color:var(--pd)}a:hover{color:#1B2414}
 .btn-p{background:var(--p);border-color:var(--p);color:#fff}.btn-p:hover{background:var(--pd)}
 .btn-d{color:#A61B12;border-color:#E9C6C2}.btn-d:hover{background:#FCEFEE}
 .btn-sm{min-height:34px;padding:0 12px;font-size:13px}
+.tip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;cursor:help;text-transform:none}
+.tip:hover,.tip:focus-visible{background:#EEF1EA;outline:0}
+.tip:hover::after,.tip:focus-visible::after{content:attr(data-tip);position:absolute;top:calc(100% + 4px);left:50%;transform:translateX(-50%);background:#1B2414;color:#fff;font-size:12px;font-weight:500;letter-spacing:0;padding:5px 9px;border-radius:6px;white-space:nowrap;z-index:30;pointer-events:none}
+.ttip{position:relative}
+.ttip:hover::after,.ttip:focus-visible::after{content:attr(data-tip);position:absolute;top:calc(100% + 6px);right:0;background:#1B2414;color:#fff;font-size:12px;font-weight:500;padding:5px 9px;border-radius:6px;white-space:nowrap;z-index:30;pointer-events:none}
+.gl{text-align:center;border-bottom:2px solid #CBD3C3;padding-bottom:4px}
+.nv{display:inline-flex;align-items:center;gap:5px;font-weight:600;white-space:nowrap}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .btn:focus-visible,.inp:focus-visible,.row:focus-visible,.seg:focus-visible,.tile:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .inp{font:inherit;font-size:14px;border:1px solid #CBD3C3;border-radius:8px;padding:0 12px;min-height:40px;background:#fff;color:#1B2414;width:100%}
@@ -42,8 +49,8 @@ h2{margin:0;font-size:17px;font-weight:700}
 label{font-size:13px;font-weight:600;color:#3A4334}
 .scroll{overflow-x:auto}
 .thead{display:grid;gap:16px;padding:12px 20px;background:#F7F9F4;border-bottom:1px solid #DDE3D6;font-size:12px;font-weight:600;color:#5B6655;text-transform:uppercase;letter-spacing:.4px}
-.glist{grid-template-columns:84px minmax(0,2.6fr) 1.3fr 90px 90px 90px 170px 24px}
-.mlist{grid-template-columns:minmax(0,1.4fr) 1.2fr minmax(0,1.4fr) 2fr 96px}
+.glist{grid-template-columns:minmax(0,2.3fr) minmax(150px,1.2fr) minmax(0,1fr) minmax(0,1.2fr) 80px 64px 64px 64px 64px 140px 24px}
+.mlist{grid-template-columns:minmax(0,1.6fr) minmax(0,1.3fr) 64px 64px 64px 64px 96px;gap:12px}
 .row{font:inherit;text-align:left;width:100%;border:0;border-bottom:1px solid #EEF1EA;background:#fff;cursor:pointer;color:inherit;display:grid;gap:16px;align-items:center;padding:16px 20px}
 .row:hover{background:var(--hv)}
 .mrow{display:grid;gap:16px;align-items:center;padding:12px 20px;border-top:1px solid #EEF1EA}
@@ -57,6 +64,19 @@ dl.kv dt{color:#5B6655}dl.kv dd{margin:0}
 .tile.on{border:2px solid var(--p);background:var(--hv);margin:0}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1B2414;color:#fff;padding:12px 18px;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.18);max-width:calc(100% - 32px)}
 .sr{position:absolute;left:-9999px}
+
+.mt{display:grid;grid-template-columns:40px minmax(0,1.3fr) 1.1fr minmax(0,1fr) minmax(0,1.2fr) 112px 112px 64px 180px 230px;gap:14px;align-items:center}
+.mcard{background:#fff;border:1px solid #DDE3D6;border-radius:12px;overflow:hidden;transition:box-shadow .15s}
+.mcard:hover{box-shadow:0 2px 10px rgba(30,50,15,.08)}
+.mcard.open{border-color:var(--p)}
+.mhead{padding:12px 16px}
+.ibtn{width:36px;height:36px;border-radius:8px;border:1px solid transparent;background:transparent;color:#4A5245;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.ibtn:hover{background:var(--ps);color:var(--pd)}
+.ibtn:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
+.chev{transition:transform .15s}
+.open .chev{transform:rotate(90deg)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:#F1F3EE;color:#3A4334;border:0;font-family:inherit}
+button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd)}
 </style>
 </head>
 <body>
@@ -66,10 +86,10 @@ dl.kv dt{color:#5B6655}dl.kv dd{margin:0}
   var M = function (id, ref, body, s, e, loc, f2f, on, af, ao) { return { id: id, ref: ref, body: body, start: s, end: e, location: loc, f2f: f2f, online: on, attF2f: af || 0, attOnline: ao || 0 }; };
   var STO = 'Stockholm, SE', GOT = 'Gothenburg Metropolitan Area, SE', SOP = 'ISET premises, Sophia Antipolis, FR';
   var S = {
-    view: 'list', site: 'P3GP', period: 'upcoming', query: '', selId: null, addOpen: false, notify: true, toast: '',
-    k4eKey: '', k4eStatus: 'none', k4eEventInput: '', newType: 'mgroup', newTitle: '', newLoc: '', newStart: '', newEnd: '',
+    view: 'list', site: 'P3GP', mGroup: 'All', mPeriod: '1y', mLoc: 'All', mSort: 'date', mOrder: 'asc', mQuery: '', mOpen: {}, period: 'upcoming', query: '', selId: null, addOpen: false, notify: true, toast: '',
+    k4eKey: '', k4eStatus: 'none', k4eProvider: 'Key4Events', k4eEventInput: '', newType: 'mgroup', newTitle: '', newLoc: '', newStart: '', newEnd: '',
     groups: [
-      { id: 'g1', title: '2027-April-EU-CT SA WGs', family: 'P3GP', kind: 'Meeting group', start: '2027-04-19', end: '2027-04-23', location: STO, regStart: 'As soon as published', regClose: '5 Apr 2027', contact: 'Meeting support (ISET)', status: 'open', k4e: { linked: false },
+      { id: 'g1', title: '2027-April-EU-CT SA WGs', family: 'P3GP', kind: 'Meeting group', start: '2027-04-19', end: '2027-04-23', location: STO, regStart: 'As soon as published', regClose: '5 Apr 2027', contact: 'Meeting support (ISET)', status: 'upcoming', k4e: { linked: false },
         meetings: [M('m1','CT1#166','P3GP CT 1','2027-04-19','2027-04-23',STO,12,1), M('m2','CT3#152','P3GP CT 3','2027-04-19','2027-04-23',STO,9,0), M('m3','CT4#140','P3GP CT 4','2027-04-19','2027-04-23',STO,8,0), M('m4','SA2#180','P3GP SA 2','2027-04-19','2027-04-23',STO,37,5), M('m5','SA3#133','P3GP SA 3','2027-04-19','2027-04-23',STO,20,2), M('m6','SA5#172','P3GP SA 5','2027-04-19','2027-04-23',STO,10,0), M('m7','SA5#172-CH SWG','P3GP SA 5','2027-04-19','2027-04-23',STO,2,0), M('m8','SA6#78','P3GP SA 6','2027-04-19','2027-04-23',STO,10,2)] },
       { id: 'g3', title: '2027-June-Sophia-ISET ISG WGs', family: 'ISET', kind: 'Meeting group', start: '2027-06-07', end: '2027-06-11', location: SOP, regStart: '1 Mar 2027', regClose: '24 May 2027', contact: 'Meeting support (ISET)', status: 'upcoming', k4e: { linked: false },
         meetings: [M('m20','ISG ENI#33','ISET ISG ENI','2027-06-07','2027-06-09',SOP,24,9), M('m21','ISG ZSM#36','ISET ISG ZSM','2027-06-08','2027-06-10',SOP,31,12), M('m22','ISG MEC#40','ISET ISG MEC','2027-06-09','2027-06-11',SOP,46,17)] },
@@ -77,7 +97,7 @@ dl.kv dt{color:#5B6655}dl.kv dd{margin:0}
         meetings: [M('m30','CYBER#47','ISET TC CYBER','2026-11-09','2026-11-12',SOP,68,41,61,37), M('m31','SAI#29','ISET ISG SAI','2026-11-16','2026-11-20',SOP,39,22)] },
       { id: 'g5', title: '2026-05-Berlin-ISET NFV & MEC', family: 'ISET', kind: 'Meeting group', start: '2026-05-11', end: '2026-05-15', location: 'Berlin, DE', regStart: 'As soon as published', regClose: '27 Apr 2026', contact: 'Meeting support (ISET)', status: 'ended', k4e: { linked: false },
         meetings: [M('m40','NFV#58','ISET ISG NFV','2026-05-11','2026-05-15','Berlin, DE',112,46,98,39), M('m41','MEC#37','ISET ISG MEC','2026-05-11','2026-05-13','Berlin, DE',57,21,49,18)] },
-      { id: 'g2', title: '2026-02-Goteborg-RAN WGs', family: 'P3GP', kind: 'Meeting group', start: '2026-02-09', end: '2026-02-13', location: GOT, regStart: 'As soon as published', regClose: '26 Jan 2026', contact: 'Meeting support (ISET)', status: 'ended', k4e: { linked: true, id: '48213', sync: '13 Feb 2026, 18:02' },
+      { id: 'g2', title: '2026-02-Goteborg-RAN WGs', family: 'P3GP', kind: 'Meeting group', start: '2026-02-09', end: '2026-02-13', location: GOT, regStart: 'As soon as published', regClose: '26 Jan 2026', contact: 'Meeting support (ISET)', status: 'ended', k4e: { linked: true, provider: 'Key4Events', keyMask: '•••• 7F2A', sync: '13 Feb 2026, 18:02' },
         meetings: [M('m10','P3GPRAN1#124','P3GP RAN 1','2026-02-09','2026-02-13',GOT,926,305,699,0), M('m11','P3GPRAN2#133','P3GP RAN 2','2026-02-09','2026-02-13',GOT,538,169,446,0), M('m12','P3GPRAN3#131','P3GP RAN 3','2026-02-09','2026-02-13',GOT,326,50,279,0), M('m13','P3GPRAN4#118','P3GP RAN 4','2026-02-09','2026-02-13',GOT,462,47,383,0), M('m14','P3GPRAN5#110','P3GP RAN 5','2026-02-09','2026-02-13',GOT,198,34,170,0)] }
     ],
     pool: [
@@ -89,6 +109,59 @@ dl.kv dt{color:#5B6655}dl.kv dd{margin:0}
     ]
   };
 
+  (function () {
+    var G = function (id, title, s0, e0, loc, regStart, regClose, status, ms) {
+      return { id: id, title: title, family: 'P3GP', kind: 'Meeting group', start: s0, end: e0, location: loc, regStart: regStart, regClose: regClose, contact: 'Meeting support (ISET)', status: status, k4e: { linked: false }, meetings: ms };
+    };
+    var TPE = 'Taipei, TW';
+    S.groups = S.groups.concat([
+      G('g20', '2026-11-Taipei-SA WGs', '2026-11-16', '2026-11-20', TPE, 'As soon as published', '2 Nov 2026', 'ongoing', [
+        M('m141', 'SA1#117', 'P3GP SA 1', '2026-11-16', '2026-11-20', TPE, 52, 24), M('m142', 'SA2#182', 'P3GP SA 2', '2026-11-16', '2026-11-20', TPE, 131, 47),
+        M('m143', 'SA3#135', 'P3GP SA 3', '2026-11-16', '2026-11-20', TPE, 76, 21), M('m144', 'SA5#173', 'P3GP SA 5', '2026-11-17', '2026-11-20', TPE, 64, 29)])
+    ]);
+    var FUK = 'Fukuoka, JP', DUB = 'Dublin, IE';
+    S.groups = S.groups.concat([
+      G('g18', '2026-05-Fukuoka-RAN WGs', '2026-05-18', '2026-05-22', FUK, 'As soon as published', '4 May 2026', 'ended', [
+        M('m121', 'RAN1#126', 'P3GP RAN 1', '2026-05-18', '2026-05-22', FUK, 588, 137, 531, 0), M('m122', 'RAN2#135', 'P3GP RAN 2', '2026-05-18', '2026-05-22', FUK, 329, 84, 297, 0),
+        M('m123', 'RAN3#133', 'P3GP RAN 3', '2026-05-18', '2026-05-22', FUK, 205, 58, 184, 0), M('m124', 'RAN4#120', 'P3GP RAN 4', '2026-05-18', '2026-05-22', FUK, 362, 69, 331, 0)]),
+      G('g19', '2026-08-Dublin-SA CT WGs', '2026-08-24', '2026-08-28', DUB, 'As soon as published', '10 Aug 2026', 'ended', [
+        M('m131', 'SA2#181', 'P3GP SA 2', '2026-08-24', '2026-08-28', DUB, 114, 38, 103, 0), M('m132', 'SA3#134', 'P3GP SA 3', '2026-08-24', '2026-08-28', DUB, 69, 17, 63, 0),
+        M('m133', 'CT1#167', 'P3GP CT 1', '2026-08-24', '2026-08-28', DUB, 44, 11, 40, 0), M('m134', 'CT4#141', 'P3GP CT 4', '2026-08-25', '2026-08-28', DUB, 27, 9, 25, 0)])
+    ]);
+    var PRG = 'Prague, CZ', BLR = 'Bangalore, IN', ATH = 'Athens, GR', TYO = 'Tokyo, JP', LIS = 'Lisbon, PT', SZX = 'Shenzhen, CN', SEL = 'Seoul, KR';
+    S.groups = S.groups.concat([
+      G('g11', '2027-02-Prague-RAN WGs', '2027-02-15', '2027-02-19', PRG, 'As soon as published', '1 Feb 2027', 'upcoming', [
+        M('m51', 'RAN1#128', 'P3GP RAN 1', '2027-02-15', '2027-02-19', PRG, 612, 148), M('m52', 'RAN2#137', 'P3GP RAN 2', '2027-02-15', '2027-02-19', PRG, 341, 96),
+        M('m53', 'RAN3#135', 'P3GP RAN 3', '2027-02-15', '2027-02-19', PRG, 214, 61), M('m54', 'RAN4#122', 'P3GP RAN 4', '2027-02-15', '2027-02-19', PRG, 387, 74)]),
+      G('g12', '2027-05-Bangalore-SA WGs', '2027-05-10', '2027-05-14', BLR, '1 Mar 2027', '26 Apr 2027', 'upcoming', [
+        M('m61', 'SA1#119', 'P3GP SA 1', '2027-05-10', '2027-05-14', BLR, 58, 22), M('m62', 'SA2#183', 'P3GP SA 2', '2027-05-10', '2027-05-14', BLR, 122, 41),
+        M('m63', 'SA3#135', 'P3GP SA 3', '2027-05-10', '2027-05-14', BLR, 74, 19), M('m64', 'SA5#174', 'P3GP SA 5', '2027-05-11', '2027-05-14', BLR, 63, 27)]),
+      G('g13', '2027-08-Athens-CT WGs', '2027-08-23', '2027-08-27', ATH, '1 Jun 2027', '9 Aug 2027', 'upcoming', [
+        M('m71', 'CT1#169', 'P3GP CT 1', '2027-08-23', '2027-08-27', ATH, 46, 12), M('m72', 'CT3#155', 'P3GP CT 3', '2027-08-23', '2027-08-27', ATH, 31, 8),
+        M('m73', 'CT4#143', 'P3GP CT 4', '2027-08-24', '2027-08-27', ATH, 29, 10)]),
+      G('g14', '2027-11-Tokyo-RAN WGs', '2027-11-08', '2027-11-12', TYO, '1 Sep 2027', '25 Oct 2027', 'upcoming', [
+        M('m81', 'RAN1#130', 'P3GP RAN 1', '2027-11-08', '2027-11-12', TYO, 701, 132), M('m82', 'RAN2#139', 'P3GP RAN 2', '2027-11-08', '2027-11-12', TYO, 402, 88),
+        M('m83', 'RAN3#137', 'P3GP RAN 3', '2027-11-08', '2027-11-12', TYO, 256, 54), M('m84', 'RAN5#118', 'P3GP RAN 5', '2027-11-09', '2027-11-12', TYO, 167, 36)]),
+      G('g15', '2028-02-Lisbon-SA WGs', '2028-02-14', '2028-02-18', LIS, '1 Dec 2027', '31 Jan 2028', 'upcoming', [
+        M('m91', 'SA2#187', 'P3GP SA 2', '2028-02-14', '2028-02-18', LIS, 0, 0), M('m92', 'SA4#150', 'P3GP SA 4', '2028-02-14', '2028-02-18', LIS, 0, 0), M('m93', 'SA6#82', 'P3GP SA 6', '2028-02-15', '2028-02-18', LIS, 0, 0)]),
+      G('g16', '2028-05-Shenzhen-RAN WGs', '2028-05-15', '2028-05-19', SZX, '1 Mar 2028', '1 May 2028', 'upcoming', [
+        M('m101', 'RAN1#134', 'P3GP RAN 1', '2028-05-15', '2028-05-19', SZX, 0, 0), M('m102', 'RAN2#143', 'P3GP RAN 2', '2028-05-15', '2028-05-19', SZX, 0, 0),
+        M('m103', 'RAN4#128', 'P3GP RAN 4', '2028-05-15', '2028-05-19', SZX, 0, 0)]),
+      G('g17', '2028-08-Seoul-CT SA WGs', '2028-08-21', '2028-08-25', SEL, '1 Jun 2028', '7 Aug 2028', 'upcoming', [
+        M('m111', 'CT1#177', 'P3GP CT 1', '2028-08-21', '2028-08-25', SEL, 0, 0), M('m112', 'SA3#141', 'P3GP SA 3', '2028-08-21', '2028-08-25', SEL, 0, 0), M('m113', 'SA5#180', 'P3GP SA 5', '2028-08-22', '2028-08-25', SEL, 0, 0)])
+    ]);
+  })();
+
+  (function () {
+    var D = {
+      g1: { itSupport: 'Erik Larsson (host IT)', survey: 'https://survey.example.org/p3gp-2027-04', info: 'Welcome reception on Sunday 18 April. Badge pick-up from 8:00 at the venue.' },
+      g2: { itSupport: 'Anna Lindqvist (host IT)', survey: 'https://survey.example.org/p3gp-ran-2026-02', info: 'Hosted by the local organizer in Gothenburg. Online access details were sent to registered participants.' },
+      g18: { itSupport: 'Kenji Mori (host IT)', survey: 'https://survey.example.org/p3gp-ran-2026-05', info: 'Shuttle service between the hotels and the venue every morning.' },
+      g19: { itSupport: 'Aoife Byrne (host IT)', survey: 'https://survey.example.org/p3gp-sa-ct-2026-08', info: 'Lunch and coffee breaks are provided on site.' },
+      g20: { itSupport: 'Wei-Ling Chen (host IT)', info: 'Registration desk opens at 8:00 on Monday. Online participants use the links in their confirmation email.' }
+    };
+    S.groups.forEach(function (g) { Object.assign(g, D[g.id] || {}); });
+  })();
   var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function pd(x) { var a = x.split('-').map(Number); return { y: a[0], m: a[1], d: a[2] }; }
   function range(a, b) {
@@ -98,11 +171,42 @@ dl.kv dt{color:#5B6655}dl.kv dd{margin:0}
     return A.d + ' ' + MON[A.m - 1] + ' – ' + B.d + ' ' + MON[B.m - 1] + ' ' + B.y;
   }
   function fmt(n) { return Number(n).toLocaleString('en-US'); }
+  var PIC = {
+    f2f: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2A5 5 0 0 1 21 19"/>',
+    on: '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/>'
+  };
+  var pic = function (k, sz) { return '<svg aria-hidden="true" width="' + (sz || 18) + '" height="' + (sz || 18) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + PIC[k] + '</svg>'; };
+  var CF = '#1F4F8F', CO = '#8A4510';
+  var tip = function (k, label) { return '<span class="tip" tabindex="0" role="img" aria-label="' + label + '" data-tip="' + label + '" style="color:' + (k === 'f2f' ? CF : CO) + '">' + pic(k) + '</span>'; };
+  var CTRY = { SE: 'Sweden', FR: 'France', DE: 'Germany', CZ: 'Czechia', IN: 'India', GR: 'Greece', JP: 'Japan', PT: 'Portugal', CN: 'China', KR: 'South Korea', IE: 'Ireland', TW: 'Taiwan' };
+  var FLG = {
+    SE: '<rect width="22" height="16" fill="#006AA7"/><rect x="6" width="3.5" height="16" fill="#FECC00"/><rect y="6.25" width="22" height="3.5" fill="#FECC00"/>',
+    FR: '<rect width="7.4" height="16" fill="#0055A4"/><rect x="7.3" width="7.4" height="16" fill="#fff"/><rect x="14.6" width="7.4" height="16" fill="#EF4135"/>',
+    DE: '<rect width="22" height="5.4" fill="#000"/><rect y="5.3" width="22" height="5.4" fill="#DD0000"/><rect y="10.6" width="22" height="5.4" fill="#FFCE00"/>',
+    CZ: '<rect width="22" height="8" fill="#fff"/><rect y="8" width="22" height="8" fill="#D7141A"/><path d="M0 0L11 8L0 16z" fill="#11457E"/>',
+    IN: '<rect width="22" height="5.4" fill="#FF9933"/><rect y="5.3" width="22" height="5.4" fill="#fff"/><rect y="10.6" width="22" height="5.4" fill="#138808"/><circle cx="11" cy="8" r="2" fill="none" stroke="#000080" stroke-width=".6"/>',
+    GR: '<rect width="22" height="16" fill="#0D5EAF"/><rect y="1.78" width="22" height="1.78" fill="#fff"/><rect y="5.33" width="22" height="1.78" fill="#fff"/><rect y="8.89" width="22" height="1.78" fill="#fff"/><rect y="12.44" width="22" height="1.78" fill="#fff"/><rect width="8.9" height="8.9" fill="#0D5EAF"/><rect x="3.55" width="1.8" height="8.9" fill="#fff"/><rect y="3.55" width="8.9" height="1.8" fill="#fff"/>',
+    JP: '<rect width="22" height="16" fill="#fff"/><circle cx="11" cy="8" r="4.8" fill="#BC002D"/>',
+    PT: '<rect width="22" height="16" fill="#FF0000"/><rect width="8.8" height="16" fill="#006600"/><circle cx="8.8" cy="8" r="3" fill="#FFCC00"/><circle cx="8.8" cy="8" r="1.7" fill="#fff"/>',
+    CN: '<rect width="22" height="16" fill="#DE2910"/><polygon points="4.5,2 5.3,4.4 7.8,4.4 5.8,5.9 6.5,8.3 4.5,6.8 2.5,8.3 3.2,5.9 1.2,4.4 3.7,4.4" fill="#FFDE00"/><circle cx="9" cy="2.2" r=".7" fill="#FFDE00"/><circle cx="10.5" cy="4" r=".7" fill="#FFDE00"/><circle cx="10.5" cy="6.3" r=".7" fill="#FFDE00"/><circle cx="9" cy="8" r=".7" fill="#FFDE00"/>',
+    KR: '<rect width="22" height="16" fill="#fff"/><circle cx="11" cy="8" r="3.6" fill="#CD2E3A"/><path d="M7.4 8a3.6 3.6 0 0 0 7.2 0a1.8 1.8 0 0 0-3.6 0a1.8 1.8 0 0 1-3.6 0z" fill="#0047A0"/><g stroke="#000" stroke-width=".9"><path d="M3 3l2.2-1.6M3.8 4.2l2.2-1.6M16.8 13.4l2.2-1.6M16 12.2l2.2-1.6M16.8 2.6l2.2 1.6M16 1.4l2.2 1.6M3 12.4l2.2 1.6M3.8 11.2l2.2 1.6"/></g>',
+    IE: '<rect width="7.4" height="16" fill="#169B62"/><rect x="7.3" width="7.4" height="16" fill="#fff"/><rect x="14.6" width="7.4" height="16" fill="#FF883E"/>',
+    TW: '<rect width="22" height="16" fill="#FE0000"/><rect width="11" height="8" fill="#000095"/><circle cx="5.5" cy="4" r="2.4" fill="#fff"/><circle cx="5.5" cy="4" r="1.5" fill="#000095"/><circle cx="5.5" cy="4" r="1.1" fill="#fff"/>'
+  };
+  var splitLoc = function (str) {
+    var parts = String(str).split(',').map(function (x) { return x.trim(); }), last = parts[parts.length - 1];
+    if (parts.length >= 2 && /^[A-Z]{2}$/.test(last)) return { city: parts[parts.length - 2], cc: last };
+    return { city: String(str), cc: '' };
+  };
+  var flag = function (cc) { return '<svg aria-hidden="true" width="22" height="16" viewBox="0 0 22 16" style="flex:none;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.18)">' + (FLG[cc] || '<rect width="22" height="16" fill="#E3E7DE"/>') + '</svg>'; };
+  var cityCell = function (str) { return '<span class="ell" style="font-size:14px;color:#1B2414" title="' + esc(String(str)) + '">' + esc(splitLoc(str).city) + '</span>'; };
+  var ctryCell = function (str) { var c = splitLoc(str).cc; return c ? '<span style="display:inline-flex;align-items:center;gap:8px;font-size:14px;min-width:0">' + flag(c) + '<span class="ell">' + (CTRY[c] || c) + '</span></span>' : '<span class="muted" style="font-size:14px">–</span>'; };
+  var nv = function (k, label, v, shown) { return '<span class="nv" title="' + label + '" style="color:' + (k === 'f2f' ? CF : CO) + '">' + pic(k, 16) + (shown === false ? '<span class="muted" style="font-weight:400">–</span>' : fmt(v)) + '</span>'; };
   function sum(ms, k) { return ms.reduce(function (t, m) { return t + m[k]; }, 0); }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function stamp() { var d = new Date(); return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear() + ', ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
   var FAM = { ISET: 'background:#E3ECF8;color:#1D4E89', 'P3GP': 'background:#E6F2DA;color:#2F6610' };
-  var ST = { open: ['Registration open', 'background:#E6F2DA;color:#2F6610'], upcoming: ['Upcoming', 'background:#E3ECF8;color:#1D4E89'], ongoing: ['In progress · editable', 'background:#FCF1E6;color:#8A4510'], ended: ['Ended · locked', 'background:#ECEEEA;color:#4A5245'] };
+  var ST = { upcoming: ['Upcoming', 'background:#E3ECF8;color:#1D4E89'], ongoing: ['Ongoing', 'background:#FCF1E6;color:#8A4510'], ended: ['Ended', 'background:#ECEEEA;color:#4A5245'] };
   var I = {
     dl: '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>',
     plus: '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
@@ -131,19 +235,19 @@ dl.kv dt{color:#5B6655}dl.kv dd{margin:0}
   }
 
   function viewList() {
-    var gs = filtered(), all = [].concat.apply([], gs.map(function (g) { return g.meetings; }));
+    var gs = filtered().slice().sort(function (a, b) { return a.start < b.start ? -1 : a.start > b.start ? 1 : 0; }), all = [].concat.apply([], gs.map(function (g) { return g.meetings; }));
     var h = '<div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px"><div style="display:flex;flex-direction:column;gap:4px"><h1>Events</h1><p class="muted" style="margin:0">' + S.site + ' meeting groups and event groups</p></div>' +
       '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="exportAll">' + I.dl + 'Export list</button><button class="btn btn-p" data-act="go" data-arg="new">' + I.plus + 'New</button></div></div>';
-    h += '<div class="kpis">' + kpi('Groups', gs.length) + kpi('Linked meetings', all.length) + kpi('Registered face to face', fmt(sum(all, 'f2f')), '#2563B0') + kpi('Registered online', fmt(sum(all, 'online')), '#D9822B') + '</div>';
     h += '<div class="card" style="padding:14px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px"><div class="segs" role="group" aria-label="Period">' +
       [['upcoming', 'Upcoming'], ['past', 'Ended'], ['all', 'All']].map(function (p) { return '<button class="seg' + (S.period === p[0] ? ' on' : '') + '" data-act="period" data-arg="' + p[0] + '">' + p[1] + '</button>'; }).join('') +
       '</div><div style="flex:1 1 240px"><label for="q" class="sr">Search</label><input id="q" class="inp" type="search" placeholder="Search group, meeting or location" value="' + esc(S.query) + '" data-model="query" data-rerender="1"></div></div>';
-    h += '<div class="card" style="overflow:hidden"><div class="scroll"><div style="min-width:940px"><div class="thead glist"><span>Family</span><span>Group</span><span>Dates</span><span style="text-align:right">Meetings</span><span style="text-align:right">F2F</span><span style="text-align:right">Online</span><span>Status</span><span></span></div>';
+    h += '<div class="card" style="overflow:hidden"><div class="scroll"><div style="min-width:1080px"><div class="thead glist" style="border-bottom:0;padding-bottom:0"><span style="grid-column:1/6"></span><span class="gl" style="grid-column:6/8">Registered</span><span class="gl" style="grid-column:8/10">Attended</span></div><div class="thead glist" style="padding-top:6px"><span>Title</span><span>Dates</span><span>City</span><span>Country</span><span style="text-align:right">Meetings</span><span style="justify-self:end">' + tip('f2f', 'Registered face to face') + '</span><span style="justify-self:end">' + tip('on', 'Registered online') + '</span><span style="justify-self:end">' + tip('f2f', 'Attended face to face') + '</span><span style="justify-self:end">' + tip('on', 'Attended online') + '</span><span>Status</span><span></span></div>';
     gs.forEach(function (g) {
-      h += '<button class="row glist" data-act="open" data-arg="' + g.id + '"><span class="tag" style="' + FAM[g.family] + '">' + g.family + '</span>' +
-        '<span style="display:flex;flex-direction:column;gap:3px;min-width:0"><span class="ell" style="font-size:15px;font-weight:600">' + esc(g.title) + '</span><span class="muted" style="font-size:13px">' + g.kind + ' · ' + esc(g.location) + '</span></span>' +
-        '<span>' + range(g.start, g.end) + '</span><span style="text-align:right;font-weight:600">' + g.meetings.length + '</span>' +
+      h += '<button class="row glist" data-act="open" data-arg="' + g.id + '">' +
+        '<span style="display:flex;flex-direction:column;gap:3px;min-width:0"><span class="ell" style="font-size:15px;font-weight:600">' + esc(g.title) + '</span><span class="muted" style="font-size:13px">' + g.kind + '</span></span>' +
+        '<span>' + range(g.start, g.end) + '</span>' + cityCell(g.location) + ctryCell(g.location) + '<span style="text-align:right;font-weight:600">' + g.meetings.length + '</span>' +
         '<span style="text-align:right;font-weight:600;color:#1F4F8F">' + fmt(sum(g.meetings, 'f2f')) + '</span><span style="text-align:right;font-weight:600;color:#8A4510">' + fmt(sum(g.meetings, 'online')) + '</span>' +
+        '<span style="text-align:right;font-weight:600;color:#1F4F8F">' + (g.status === 'upcoming' ? '<span class="muted" style="font-weight:400">–</span>' : fmt(sum(g.meetings, 'attF2f'))) + '</span><span style="text-align:right;font-weight:600;color:#8A4510">' + (g.status === 'upcoming' ? '<span class="muted" style="font-weight:400">–</span>' : fmt(sum(g.meetings, 'attOnline'))) + '</span>' +
         '<span class="pill" style="' + ST[g.status][1] + '">' + (g.status === 'ended' ? I.lock : '') + ST[g.status][0] + '</span>' + I.chev + '</button>';
     });
     if (!gs.length) h += '<div class="muted" style="padding:40px 20px;text-align:center">No group matches these filters.</div>';
@@ -160,12 +264,16 @@ dl.kv dt{color:#5B6655}dl.kv dd{margin:0}
     h += '<div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:16px"><div style="display:flex;flex-direction:column;gap:8px;min-width:0"><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">' +
       '<span class="tag" style="' + FAM[g.family] + '">' + g.family + '</span><span class="tag" style="background:#F1F3EE;color:#3A4334;font-weight:600">' + g.kind + '</span><span class="pill" style="' + ST[g.status][1] + '">' + ST[g.status][0] + '</span></div>' +
       '<h1>' + esc(g.title) + '</h1><p class="muted" style="margin:0">' + range(g.start, g.end) + ' · ' + esc(g.location) + '</p></div>' +
-      '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="exportMeetings">' + I.dl + 'Export meetings</button><button class="btn" data-act="exportParticipants">' + I.dl + 'Export participants</button><button class="btn btn-p" data-act="editGroup"' + dis(locked) + '>Edit group details</button></div></div>';
+      '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn ttip" data-act="exportParticipants" data-tip="Export all participants per meeting" aria-label="Export all participants per meeting">' + I.dl + 'Export</button></div></div>';
     if (locked) h += '<div role="status" style="display:flex;gap:12px;align-items:flex-start;background:#F1F3EE;border:1px solid #D5DBCE;border-radius:10px;padding:14px 16px">' + I.lock + '<span><strong>This group has ended and is read-only.</strong> Meetings can no longer be added or detached. Participant lists and attendance stay available for export.</span></div>';
+    var pairTile = function (label, f, o, kf, ko) {
+      var big = function (k, lab, v) { return '<span style="display:inline-flex;align-items:center;gap:8px;font-size:28px;font-weight:700;color:' + (k === 'f2f' ? CF : CO) + '">' + tip(k, lab) + v + '</span>'; };
+      return '<div class="card kpi"><span class="l">' + label + '</span><div style="display:flex;flex-wrap:wrap;gap:4px 28px">' + big('f2f', kf, f) + big('on', ko, o) + '</div></div>';
+    };
+    var started = g.status !== 'upcoming', dash = '<span class="muted" style="font-weight:400">–</span>';
     h += '<div class="kpis">' + kpi('Meetings in group', g.meetings.length) +
-      kpi('Registered face to face', fmt(sum(g.meetings, 'f2f')), '#2563B0', locked ? fmt(sum(g.meetings, 'attF2f')) + ' attended' : '') +
-      kpi('Registered online', fmt(sum(g.meetings, 'online')), '#D9822B', locked ? fmt(sum(g.meetings, 'attOnline')) + ' attended' : '') +
-      '<div class="card kpi"><span class="l">Registration</span><span style="font-size:15px;font-weight:600">Closes ' + esc(g.regClose) + '</span><span class="muted" style="font-size:13px">Opens: ' + esc(g.regStart) + '</span></div></div>';
+      pairTile('Registered', fmt(sum(g.meetings, 'f2f')), fmt(sum(g.meetings, 'online')), 'Registered face to face', 'Registered online') +
+      pairTile('Attended', started ? fmt(sum(g.meetings, 'attF2f')) : dash, started ? fmt(sum(g.meetings, 'attOnline')) : dash, 'Attended face to face', 'Attended online') + '</div>';
 
     h += '<div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start"><div style="flex:999 1 640px;min-width:0"><section class="card" style="overflow:hidden">' +
       '<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid #EEF1EA"><h2>Meetings</h2>' +
@@ -184,34 +292,124 @@ dl.kv dt{color:#5B6655}dl.kv dd{margin:0}
         ? '<label style="display:flex;align-items:center;gap:8px;font-weight:500"><input type="checkbox" data-act="toggleNotify"' + (S.notify ? ' checked' : '') + ' style="width:18px;height:18px;accent-color:var(--p)"> Notify registered participants when a meeting is added</label>'
         : '<span class="muted" style="font-size:13px">P3GP: no group-level notification is sent. Participants keep registering per meeting.</span>') + '</div>';
     }
-    h += '<div class="scroll"><div style="min-width:760px"><div class="thead mlist" style="border-bottom:0"><span>Meeting</span><span>Dates</span><span>Location</span><span>Participants (F2F / online)</span><span></span></div>';
+    h += '<div class="scroll"><div style="min-width:640px"><div class="thead mlist" style="border-bottom:0;padding-bottom:0"><span style="grid-column:1/3"></span><span class="gl" style="grid-column:3/5">Registered</span><span class="gl" style="grid-column:5/7">Attended</span></div><div class="thead mlist" style="padding-top:6px;border-bottom:0"><span>Meeting</span><span>Dates</span><span style="justify-self:end">' + tip('f2f', 'Registered face to face') + '</span><span style="justify-self:end">' + tip('on', 'Registered online') + '</span><span style="justify-self:end">' + tip('f2f', 'Attended face to face') + '</span><span style="justify-self:end">' + tip('on', 'Attended online') + '</span><span></span></div>';
     g.meetings.forEach(function (m) {
       h += '<div class="mrow mlist"><span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-weight:600">' + m.ref + '</span><span class="muted" style="font-size:12px">' + m.body + '</span></span>' +
-        '<span style="font-size:13px">' + range(m.start, m.end) + '</span><span class="ell" style="font-size:13px;color:#3A4334">' + m.location + '</span>' +
-        '<span style="display:flex;flex-direction:column;gap:6px"><span class="bar"><span style="width:' + (m.f2f / maxT * 100).toFixed(1) + '%;background:#2563B0"></span><span style="width:' + (m.online / maxT * 100).toFixed(1) + '%;background:#D9822B"></span></span>' +
-        '<span style="font-size:12px;color:#3A4334"><strong style="color:#1F4F8F">' + fmt(m.f2f) + '</strong> F2F · <strong style="color:#8A4510">' + fmt(m.online) + '</strong> online' + (locked ? ' · attended ' + fmt(m.attF2f) + ' / ' + fmt(m.attOnline) : '') + '</span></span>' +
+        '<span style="font-size:13px">' + range(m.start, m.end) + '</span>' +
+        '<span style="text-align:right;font-weight:600;color:#1F4F8F">' + fmt(m.f2f) + '</span><span style="text-align:right;font-weight:600;color:#8A4510">' + fmt(m.online) + '</span>' +
+        '<span style="text-align:right;font-weight:600;color:#1F4F8F">' + (g.status === 'upcoming' ? '<span class="muted" style="font-weight:400">–</span>' : fmt(m.attF2f)) + '</span><span style="text-align:right;font-weight:600;color:#8A4510">' + (g.status === 'upcoming' ? '<span class="muted" style="font-weight:400">–</span>' : fmt(m.attOnline)) + '</span>' +
         '<span style="justify-self:end">' + (locked ? '' : '<button class="btn btn-d btn-sm" data-act="detach" data-arg="' + m.id + '" aria-label="Detach ' + m.ref + ' from the group">Detach</button>') + '</span></div>';
     });
     if (!g.meetings.length) h += '<div class="muted" style="padding:32px 20px;text-align:center;border-top:1px solid #EEF1EA">No meeting in this group yet. Use Add meeting to create or link one.</div>';
     h += '</div></div></section></div>';
 
-    h += '<aside style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:24px"><section class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:12px"><h2>Group details</h2><dl class="kv">' +
-      '<dt>Body family</dt><dd>' + g.family + '</dd><dt>Location</dt><dd>' + esc(g.location) + '</dd><dt>Contact</dt><dd>' + esc(g.contact) + '</dd>' +
-      '<dt>Visibility</dt><dd>' + (isEtsi ? 'Shown in the ISET calendar as one entry' : 'Internal only (staff and hosting partners)') + '</dd><dt>Registration</dt><dd>' + (isEtsi ? 'Bulk registration for the whole group' : 'Per meeting, as today') + '</dd></dl></section>';
-    h += '<section class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:12px"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><h2>Key4Events</h2>' + (g.k4e.linked ? '<span class="pill" style="background:#E6F2DA;color:#2F6610">Linked</span>' : '') + '</div>';
+    h += '<aside style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:24px"><section class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:12px"><h2>Event details</h2><dl class="kv">' +
+      '<dt>Body family</dt><dd>' + g.family + '</dd>' +
+      '<dt>IT support</dt><dd>' + (g.itSupport ? esc(g.itSupport) : '<span class="muted">Not set</span>') + '</dd>' +
+      '<dt>Satisfaction survey URL</dt><dd style="word-break:break-all">' + (g.survey ? '<a href="' + esc(g.survey) + '" target="_blank" rel="noopener">' + esc(g.survey) + '</a>' : '<span class="muted">Not set</span>') + '</dd>' +
+      '<dt>Additional event information</dt><dd style="line-height:1.5">' + (g.info ? esc(g.info) : '<span class="muted">Not set</span>') + '</dd></dl></section>';
+    h += '<section class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:12px"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><h2>Integration</h2>' + (g.k4e.linked ? '<span class="pill" style="background:#E6F2DA;color:#2F6610">Connected</span>' : '') + '</div>';
     if (g.k4e.linked) {
-      h += '<dl class="kv"><dt>Event ID</dt><dd style="font-weight:600">' + esc(g.k4e.id) + '</dd><dt>Last sync</dt><dd>' + g.k4e.sync + '</dd><dt>Data shared</dt><dd>Meeting list, F2F participants</dd></dl>' +
-        '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="syncK4e"' + dis(!k4eOn) + '>Sync now</button><button class="btn btn-d" data-act="unlinkK4e"' + dis(locked) + '>Unlink</button></div>' +
-        (k4eOn ? '' : '<p class="muted" style="margin:0;font-size:13px">Reconnect Key4Events in Integrations to sync.</p>');
-    } else if (!k4eOn) {
-      h += '<p class="muted" style="margin:0;font-size:13px">Key4Events is not connected. Add your API key first.</p><button class="btn" data-act="go" data-arg="settings" style="align-self:flex-start">Open Integrations</button>';
+      h += '<dl class="kv"><dt>Provider</dt><dd style="font-weight:600">' + esc(g.k4e.provider || 'Key4Events') + '</dd><dt>API key</dt><dd style="font-family:ui-monospace,monospace">' + esc(g.k4e.keyMask || '••••') + '</dd><dt>Last sync</dt><dd>' + esc(g.k4e.sync) + '</dd><dt>Data shared</dt><dd>Meeting list, F2F participants</dd></dl>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="syncK4e">Sync now</button><button class="btn btn-d" data-act="unlinkK4e"' + dis(locked) + '>Disconnect</button></div>';
     } else {
-      h += '<label for="k4eid">Key4Events event ID</label><input id="k4eid" class="inp" placeholder="e.g. 48213" value="' + esc(S.k4eEventInput) + '" data-model="k4eEventInput" data-rerender="1"' + dis(locked) + '>' +
-        '<button class="btn btn-p" data-act="linkK4e" style="align-self:flex-start"' + dis(locked || !S.k4eEventInput.trim()) + '>Link this group</button>';
+      h += '<div class="field"><label for="prov">Provider</label><select id="prov" class="inp" data-model="k4eProvider"' + dis(locked) + '><option selected>Key4Events</option><option disabled>Other providers (coming soon)</option></select></div>' +
+        '<div class="field"><label for="k4ekey">API key</label><input id="k4ekey" class="inp" type="password" autocomplete="off" placeholder="Paste the API key from your provider account" value="' + esc(S.k4eKey) + '" data-model="k4eKey" data-rerender="1"' + dis(locked) + '></div>' +
+        (S.k4eStatus === 'error' ? '<p role="alert" style="margin:0;font-size:13px;color:#A61B12">The key was rejected. Check it in your provider account and try again.</p>' : '') +
+        '<p class="muted" style="margin:0;font-size:13px">Sharing participant data with a host requires the GDPR agreement for this event.</p>' +
+        '<button class="btn btn-p" data-act="connectK4e" style="align-self:flex-start"' + dis(locked || !S.k4eKey.trim()) + '>Test and connect</button>';
     }
     h += '</section></aside></div>';
     return h;
   }
+
+
+  function viewMeetings() {
+    var d = new Date(), z = function (n) { return String(n).padStart(2, '0'); };
+    var iso = function (x) { return x.getFullYear() + '-' + z(x.getMonth() + 1) + '-' + z(x.getDate()); };
+    var today = iso(d), plus = function (n) { var x = new Date(d); x.setDate(x.getDate() + n); return iso(x); };
+    var LIM = { '1m': 30, '6m': 183, '1y': 365 };
+    var all = [];
+    S.groups.forEach(function (g) { if (g.family === S.site) g.meetings.forEach(function (m) { all.push(Object.assign({}, m, { gid: g.id, gtitle: g.title })); }); });
+    S.pool.forEach(function (m) { if (m.family === S.site) all.push(Object.assign({}, m, { gid: null, gtitle: '' })); });
+    var bodies = ['All'], locs = ['All'];
+    all.forEach(function (m) { if (bodies.indexOf(m.body) < 0) bodies.push(m.body); if (locs.indexOf(m.location) < 0) locs.push(m.location); });
+    var q = S.mQuery.trim().toLowerCase();
+    var list = all.filter(function (m) {
+      if (S.mGroup !== 'All' && m.body !== S.mGroup) return false;
+      if (S.mLoc !== 'All' && m.location !== S.mLoc) return false;
+      if (S.mPeriod === 'ended') { if (m.end >= today) return false; }
+      else if (m.end < today || m.start > plus(LIM[S.mPeriod])) return false;
+      if (q && (m.ref + ' ' + m.body + ' ' + m.location + ' ' + m.gtitle).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+    var dir = S.mOrder === 'desc' ? -1 : 1;
+    list.sort(function (a, b) {
+      var x = S.mSort === 'name' ? a.ref : S.mSort === 'location' ? a.location : a.start, y = S.mSort === 'name' ? b.ref : S.mSort === 'location' ? b.location : b.start;
+      return (x < y ? -1 : x > y ? 1 : a.ref < b.ref ? -1 : 1) * dir;
+    });
+    var opt = function (arr, cur) { return arr.map(function (o) { return '<option' + (o === cur ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join(''); };
+    var sel2 = function (id, lbl, inner, k) { return '<div class="field" style="min-width:120px"><label for="' + id + '">' + lbl + '</label><select id="' + id + '" class="inp" data-model="' + k + '" data-rerender="1">' + inner + '</select></div>'; };
+    var ic = function (path) { return '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + path + '</svg>'; };
+    var IC = {
+      reg: ic('<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/>'),
+      doc: ic('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'),
+      dup: ic('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>'),
+      xl: ic('<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>'),
+      more: ic('<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>'),
+      cal: ic('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'),
+      pin: ic('<path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>'),
+      user: ic('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),
+      file: ic('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>')
+    };
+    var act = function (svg, label, a, arg) { return '<button class="ibtn" data-act="' + a + '" data-arg="' + esc(arg) + '" aria-label="' + label + '" title="' + label + '">' + svg + '</button>'; };
+
+    var h = '<div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px"><div style="display:flex;flex-direction:column;gap:4px"><h1>Meetings</h1><p class="muted" style="margin:0">' + list.length + ' ' + S.site + ' meeting' + (list.length === 1 ? '' : 's') + ' in this view</p></div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="noop" data-arg="Upload TDoc">Upload TDoc</button><button class="btn" data-act="exportMtg">' + I.dl + 'Export list</button><button class="btn" data-act="noop" data-arg="Webinar participants list">Webinar participants list</button><button class="btn btn-p" data-act="newMeeting">' + I.plus + 'New meeting</button></div></div>';
+
+    h += '<div class="card" style="padding:16px 18px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 18px">' +
+      sel2('mg', 'Groups', opt(bodies, S.mGroup), 'mGroup') +
+      '<div class="field"><span style="font-size:13px;font-weight:600;color:#3A4334">Display period</span><div class="segs" role="group" aria-label="Display period">' +
+      [['ended', 'Ended'], ['1m', '1 month'], ['6m', '6 months'], ['1y', '1 year']].map(function (p) { return '<button class="seg' + (S.mPeriod === p[0] ? ' on' : '') + '" data-act="mperiod" data-arg="' + p[0] + '">' + p[1] + '</button>'; }).join('') + '</div></div>' +
+      sel2('ml', 'Location', opt(locs, S.mLoc), 'mLoc') +
+      sel2('ms', 'Sort by', '<option value="date"' + (S.mSort === 'date' ? ' selected' : '') + '>Date</option><option value="name"' + (S.mSort === 'name' ? ' selected' : '') + '>Meeting</option><option value="location"' + (S.mSort === 'location' ? ' selected' : '') + '>Location</option>', 'mSort') +
+      sel2('mo', 'Order', '<option value="asc"' + (S.mOrder === 'asc' ? ' selected' : '') + '>Ascending</option><option value="desc"' + (S.mOrder === 'desc' ? ' selected' : '') + '>Descending</option>', 'mOrder') +
+      '<div class="field" style="flex:1 1 140px"><label for="mq">Search</label><input id="mq" class="inp" type="search" placeholder="Meeting, body or location" value="' + esc(S.mQuery) + '" data-model="mQuery" data-rerender="1"></div>' +
+      '<button class="btn" data-act="mreset">Reset filters</button></div>';
+
+    h += '<div class="scroll"><div style="min-width:1300px;display:flex;flex-direction:column;gap:10px">' +
+      '<div class="mt muted" style="padding:0 16px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.4px"><span></span><span>Meeting</span><span>Dates</span><span>City</span><span>Country</span>' +
+      '<span style="display:flex;flex-direction:column;gap:2px">Registered<span style="display:flex;gap:2px">' + tip('f2f', 'Registered face to face') + tip('on', 'Registered online') + '</span></span>' +
+      '<span style="display:flex;flex-direction:column;gap:2px">Attended<span style="display:flex;gap:2px">' + tip('f2f', 'Attended face to face') + tip('on', 'Attended online') + '</span></span>' +
+      '<span>TDocs</span><span>Event group</span><span style="text-align:right">Actions</span></div>';
+    list.forEach(function (m) {
+      var open = !!S.mOpen[m.id], ended = m.end < today, ongoing = !ended && m.start <= today;
+      var st = ended ? ['Ended', 'background:#ECEEEA;color:#4A5245'] : ongoing ? ['Ongoing', 'background:#FCF1E6;color:#8A4510'] : ['Upcoming', 'background:#E3ECF8;color:#1D4E89'];
+      h += '<div class="mcard' + (open ? ' open' : '') + '"><div class="mt mhead"><button class="ibtn" data-act="mtoggle" data-arg="' + m.id + '" aria-expanded="' + open + '" aria-label="' + (open ? 'Collapse' : 'Expand') + ' ' + m.ref + '"><span class="chev" style="display:inline-flex"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>' +
+        '<span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span class="ell" style="font-size:15px;font-weight:700">' + esc(m.ref) + '</span><span class="muted ell" style="font-size:13px">' + esc(m.body) + '</span></span>' +
+        '<span style="display:flex;flex-direction:column;gap:4px"><span style="font-size:14px">' + range(m.start, m.end) + '</span><span class="pill" style="align-self:flex-start;font-size:11px;padding:2px 8px;' + st[1] + '">' + st[0] + '</span></span>' +
+        cityCell(m.location) + ctryCell(m.location) +
+        '<span style="display:flex;flex-direction:column;gap:4px">' + nv('f2f', 'Registered face to face', m.f2f) + nv('on', 'Registered online', m.online) + '</span>' +
+        '<span style="display:flex;flex-direction:column;gap:4px">' + nv('f2f', 'Attended face to face', m.attF2f, m.start <= today) + nv('on', 'Attended online', m.attOnline, m.start <= today) + '</span>' +
+        '<span class="chip" style="justify-self:start">0</span>' +
+        '<span>' + (m.gid ? '<button class="chip" data-act="open" data-arg="' + m.gid + '" title="Open this event group" style="max-width:100%"><span class="ell">' + esc(m.gtitle) + '</span></button>' : '<span class="muted" style="font-size:13px">Standalone</span>') + '</span>' +
+        '<span style="display:flex;justify-content:flex-end;gap:2px">' + act(IC.reg, 'Register to ' + m.ref, 'noop', 'Registration') + act(IC.doc, 'Documents of ' + m.ref, 'noop', 'Documents') + act(IC.dup, 'Duplicate ' + m.ref, 'noop', 'Duplicate') + act(IC.xl, 'Export participants of ' + m.ref, 'exportOne', m.id) + act(IC.more, 'More actions for ' + m.ref, 'noop', 'More actions') + '</span></div>';
+      if (open) {
+        var tot = m.f2f + m.online || 1;
+        h += '<div style="border-top:1px solid #EEF1EA;background:var(--hv);padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">' +
+          '<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600;color:#5B6655;text-transform:uppercase;letter-spacing:.4px">Details</span><dl class="kv"><dt>Presence</dt><dd>' + (m.f2f && m.online ? 'Face to face and online' : m.f2f ? 'Face to face' : 'Online') + '</dd><dt>Dates</dt><dd>' + range(m.start, m.end) + '</dd><dt>Location</dt><dd>' + esc(m.location) + '</dd></dl></div>' +
+          '<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600;color:#5B6655;text-transform:uppercase;letter-spacing:.4px">Registration split</span><span class="bar"><span style="width:' + (m.f2f / tot * 100).toFixed(1) + '%;background:#2563B0"></span><span style="width:' + (m.online / tot * 100).toFixed(1) + '%;background:#D9822B"></span></span><span style="font-size:13px"><strong style="color:#1F4F8F">' + fmt(m.f2f) + '</strong> face to face · <strong style="color:#8A4510">' + fmt(m.online) + '</strong> online · ' + fmt(m.f2f + m.online) + ' total</span></div>' +
+          '<div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="font-size:12px;font-weight:600;color:#5B6655;text-transform:uppercase;letter-spacing:.4px">Event group</span>' +
+          (m.gid ? '<span style="font-size:14px;font-weight:600">' + esc(m.gtitle) + '</span><button class="btn btn-sm" data-act="open" data-arg="' + m.gid + '">Manage this event group</button>' : '<span class="muted" style="font-size:13px">Not linked to any group.</span><button class="btn btn-sm" data-act="noop" data-arg="Link to a group">Link to an event group</button>') + '</div></div>';
+      }
+      h += '</div>';
+    });
+    if (!list.length) h += '<div class="card" style="padding:40px 20px;text-align:center"><p style="margin:0 0 12px">No meeting matches these filters.</p><button class="btn" data-act="mperiod" data-arg="ended">See all past meetings</button></div>';
+    h += '</div></div>';
+    mtgInfo = list;
+    return h;
+  }
+  var mtgInfo = [];
 
   function viewNew() {
     var isEtsi = S.site === 'ISET', it = isEtsi ? ' (P3GP only)' : '';
@@ -262,35 +460,77 @@ dl.kv dt{color:#5B6655}dl.kv dd{margin:0}
 
   var app = document.getElementById('app');
   function render() {
+    var t0 = new Date(), td = t0.getFullYear() + '-' + String(t0.getMonth() + 1).padStart(2, '0') + '-' + String(t0.getDate()).padStart(2, '0');
+    S.groups.forEach(function (g) { g.status = g.end < td ? 'ended' : g.start <= td ? 'ongoing' : 'upcoming'; });
     var ae = document.activeElement, fid = ae && ae.id, ss = null;
     try { ss = ae && ae.selectionStart; } catch (e) {}
     app.className = S.site === 'ISET' ? 's-etsi' : 's-3gpp';
     var nav = function (v, l) { var on = S.view === v || (v === 'list' && S.view === 'detail'); return '<button class="seg" data-act="go" data-arg="' + v + '" style="' + (on ? 'background:var(--ps);color:var(--pd)' : '') + '">' + l + '</button>'; };
-    var body = S.view === 'detail' ? viewDetail() : S.view === 'new' ? viewNew() : S.view === 'settings' ? viewSettings() : viewList();
-    app.innerHTML =
+    var body = S.view === 'meetings' ? viewMeetings() : S.view === 'detail' ? viewDetail() : S.view === 'new' ? viewNew() : S.view === 'settings' ? viewSettings() : viewList();
+    var now = new Date(), pad = function (n) { return String(n).padStart(2, '0'); };
+    var clock = now.getDate() + ' ' + MON[now.getMonth()] + ' ' + now.getFullYear() + ' - ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds()) + ' (GMT+1)';
+    var TABS = ['Meetings', 'Events', 'TDocs', 'Change Requests', 'Liaison statements', 'Releases', 'Work Plan', 'Specifications'];
+    var MENU = ['Home', 'My account', 'Directory', 'Browse FTP', 'Voting', 'Help'];
+    var sub = function (v, l) { var on = S.view === v || (v === 'list' && S.view === 'detail'); return '<button class="btn' + (on ? ' btn-p' : '') + '" data-act="go" data-arg="' + v + '" style="min-height:36px"' + (on ? ' aria-current="page"' : '') + '>' + l + '</button>'; };
+    var proto =
       '<div style="background:#1B2414;color:#E8ECE4;font-size:12px"><div class="wrap" style="padding-top:6px;padding-bottom:6px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px"><span>Prototype · view as portal:</span>' +
       '<div role="group" aria-label="Portal" style="display:flex;gap:2px;background:#333C2D;border-radius:6px;padding:2px">' +
       ['P3GP', 'ISET'].map(function (s) { return '<button class="seg" data-act="site" data-arg="' + s + '" style="min-height:28px;font-size:12px;' + (S.site === s ? 'background:#fff;color:#1B2414' : 'color:#E8ECE4') + '">' + s + '</button>'; }).join('') +
-      '</div><span style="color:#B8C0B2">Shared back end: same groups, meetings and participants database</span></div></div>' +
-      '<header style="background:#fff;border-bottom:1px solid #DDE3D6"><div class="wrap" style="padding-top:12px;padding-bottom:12px;display:flex;flex-wrap:wrap;align-items:center;gap:16px 32px">' +
-      '<div style="display:flex;align-items:center;gap:12px"><div style="width:44px;height:36px;border-radius:9px;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px">' + S.site + '</div><div style="display:flex;flex-direction:column"><span style="font-weight:700;font-size:15px">' + S.site + ' Portal</span><span class="muted" style="font-size:12px">Meetings Management</span></div></div>' +
-      '<nav aria-label="Main" style="display:flex;flex-wrap:wrap;gap:4px;flex:1 1 auto">' + nav('list', 'Events') + nav('new', 'New') + nav('settings', 'Integrations') + '</nav>' +
-      '<div style="display:flex;align-items:center;gap:10px"><span class="muted" style="font-size:13px">Olga Kozlova</span><div aria-hidden="true" style="width:32px;height:32px;border-radius:50%;background:var(--ps);color:var(--pd);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px">OK</div></div></div>' +
-      '<div aria-hidden="true" style="height:3px;background:var(--acc)"></div></header>' +
-      '<main class="wrap" style="flex:1;padding-top:28px;padding-bottom:64px;display:flex;flex-direction:column;gap:24px">' + body + '</main>' +
+      '</div><span style="color:#B8C0B2">Shared back end: same groups, meetings and participants database</span></div></div>';
+    if (S.site === 'ISET') {
+      app.innerHTML = proto +
+        '<main class="wrap" style="flex:1;padding-top:80px;padding-bottom:80px;display:flex;justify-content:center">' +
+        '<div class="card" style="max-width:560px;width:100%;padding:40px 32px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center">' +
+        '<svg aria-hidden="true" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#1D5FA8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V9l7-5 7 5v11"/><path d="M9 20v-6h6v6"/></svg>' +
+        '<h1>ISET Portal</h1><p style="margin:0;font-size:16px;font-weight:600;color:#1D4E89">Under construction</p>' +
+        '<p class="muted" style="margin:0;line-height:1.5">The ISET front end for event groups is not designed yet. It will use the same back end as the P3GP portal.</p>' +
+        '<button class="btn" data-act="site" data-arg="P3GP" style="margin-top:8px">View the P3GP portal</button></div></main>' +
+        (S.toast ? '<div class="toast" role="status">' + esc(S.toast) + '</div>' : '');
+      if (fid) { var el0 = document.getElementById(fid); if (el0) el0.focus(); }
+      return;
+    }
+    app.innerHTML = proto +
+      '<header style="background:#fff">' +
+      '<div class="wrap" style="padding-top:14px;padding-bottom:14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px">' +
+      '<div style="display:flex;align-items:flex-end;gap:20px"><div style="display:flex;flex-direction:column;line-height:1"><span style="font-size:34px;font-weight:800;letter-spacing:-2px;color:#1B2414">P3GP</span><span style="font-size:8px;letter-spacing:2.4px;color:#3A4334;margin-top:4px">A GLOBAL INITIATIVE</span></div>' +
+      '<span style="font-size:30px;font-weight:600;color:#1B2414;font-family:inherit;letter-spacing:-.5px">Portal</span></div>' +
+      '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px">' +
+      '<div style="display:flex;flex-direction:column;align-items:center;font-size:11px;color:#3A4334"><span>' + clock + '</span><span>Sophia Antipolis - France</span></div>' +
+      '<span style="font-size:13px;color:#3A4334">Welcome <strong>Olga Kozlova</strong></span>' +
+      '<button class="btn" data-act="noop" data-arg="Logout" style="min-height:34px;font-size:13px">Logout</button></div></div>' +
+      '<div class="wrap" style="display:flex;flex-wrap:wrap;gap:8px 24px;padding-bottom:10px">' +
+      '<button data-act="noop" data-arg="Select TSG/WG" style="font:inherit;font-size:13px;font-weight:700;color:#fff;background:#3F8314;border:0;border-radius:6px;min-height:40px;padding:0 16px;flex:0 1 215px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer">Select TSG/WG<svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 9l6 6 6-6z"/></svg></button>' +
+      '<nav aria-label="Portal menu" style="flex:1 1 400px;background:#3F8314;border-radius:6px;display:flex;flex-wrap:wrap;align-items:center;padding:0 8px">' +
+      MENU.map(function (m) { return '<button data-act="noop" data-arg="' + m + '" style="font:inherit;font-size:13px;font-weight:700;color:#fff;background:transparent;border:0;min-height:40px;padding:0 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px">' + (m === 'Directory' ? '<svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>' : '') + m + '</button>'; }).join('') +
+      '</nav></div>' +
+      '<div style="border-bottom:1px solid #C9D9B4"><div class="wrap scroll"><nav aria-label="Sections" style="display:flex;gap:3px;padding-top:4px">' +
+      TABS.map(function (t) {
+        var on = (t === 'Events' && S.view !== 'meetings') || (t === 'Meetings' && S.view === 'meetings');
+        return '<button data-act="' + (t === 'Meetings' || t === 'Events' ? 'go' : 'noop') + '" data-arg="' + (t === 'Meetings' ? 'meetings' : t === 'Events' ? 'list' : t) + '"' + (on ? ' aria-current="page"' : '') + ' style="font:inherit;font-size:13px;font-weight:700;white-space:nowrap;cursor:pointer;min-height:40px;padding:0 16px;border-radius:6px 6px 0 0;margin-bottom:-1px;' +
+          (on ? 'background:#fff;color:#2F6610;border:1px solid #C9D9B4;border-bottom-color:#fff' : 'background:#3F8314;color:#fff;border:1px solid #3F8314') + '">' + t + '</button>';
+      }).join('') +
+      '</nav></div></div>' +
+      
+      '</header>' +
+      '<main class="wrap" style="flex:1;padding-top:20px;padding-bottom:64px;display:flex;flex-direction:column;gap:24px">' + body + '</main>' +
       (S.toast ? '<div class="toast" role="status">' + esc(S.toast) + '</div>' : '');
     if (fid) { var el = document.getElementById(fid); if (el) { el.focus(); try { if (ss != null) el.setSelectionRange(ss, ss); } catch (e) {} } }
   }
 
   var A = {
+    mperiod: function (p) { S.mPeriod = p; },
+    mreset: function () { S.mGroup = 'All'; S.mLoc = 'All'; S.mPeriod = '1y'; S.mSort = 'date'; S.mOrder = 'asc'; S.mQuery = ''; },
+    mtoggle: function (id) { S.mOpen[id] = !S.mOpen[id]; },
+    newMeeting: function () { S.newType = 'standalone'; S.view = 'new'; },
+    exportMtg: function () { flash('meetings_list.xlsx exported (' + mtgInfo.length + ' meetings).'); return true; },
+    exportOne: function (id) { var m = mtgInfo.find(function (x) { return x.id === id; }); flash((m ? m.ref : 'Meeting') + '_participants.xlsx exported (' + (m ? fmt(m.f2f) + ' face to face, ' + fmt(m.online) + ' online' : '') + ').'); return true; },
+    noop: function (what) { flash(what + ' is not part of this prototype.'); return true; },
     go: function (v) { S.view = v; S.addOpen = false; },
     site: function (s) { S.site = s; S.view = 'list'; S.selId = null; S.addOpen = false; },
     period: function (p) { S.period = p; },
-    open: function (id) { S.view = 'detail'; S.selId = id; S.addOpen = false; S.k4eEventInput = ''; },
+    open: function (id) { S.view = 'detail'; S.selId = id; S.addOpen = false; S.k4eEventInput = ''; S.k4eKey = ''; S.k4eStatus = 'none'; },
     exportAll: function () { flash('events_list.xlsx exported (' + exportInfo.n + ' groups, ' + exportInfo.m + ' meetings).'); return true; },
-    exportMeetings: function () { var g = sel(); flash(g.title + '_meetings.xlsx exported (' + g.meetings.length + ' meetings).'); return true; },
-    exportParticipants: function () { var g = sel(); flash(g.title + '_participants.xlsx exported (' + fmt(sum(g.meetings, 'f2f')) + ' registered face to face, ' + fmt(sum(g.meetings, 'online')) + ' registered online, ' + fmt(sum(g.meetings, 'attF2f')) + ' attended face to face, ' + fmt(sum(g.meetings, 'attOnline')) + ' attended online).'); return true; },
-    editGroup: function () { flash('Opens the group details form (same fields as New › ' + sel().kind + ').'); return true; },
+    exportParticipants: function () { var g = sel(); flash(g.title + '_participants_per_meeting.xlsx exported (' + g.meetings.length + ' meetings, ' + fmt(sum(g.meetings, 'f2f') + sum(g.meetings, 'online')) + ' registered participants).'); return true; },
     toggleAdd: function () { S.addOpen = !S.addOpen; },
     toggleNotify: function () { S.notify = !S.notify; },
     createInGroup: function () { flash('Opens the meeting form with the group values pre-filled. Breadcrumb: ' + sel().title); return true; },
@@ -307,9 +547,14 @@ dl.kv dt{color:#5B6655}dl.kv dd{margin:0}
       S.pool = S.pool.concat([Object.assign({}, m, { family: g.family })]);
       flash(m.ref + ' detached. It is now a standalone meeting.'); return true;
     },
-    linkK4e: function () { var id = S.k4eEventInput.trim(); upd(function (x) { return Object.assign({}, x, { k4e: { linked: true, id: id, sync: stamp() } }); }); S.k4eEventInput = ''; flash('Group linked to Key4Events event ' + id + '. First sync done.'); return true; },
+    connectK4e: function () {
+      var k = S.k4eKey.trim();
+      if (k.length < 8) { S.k4eStatus = 'error'; return; }
+      upd(function (x) { return Object.assign({}, x, { k4e: { linked: true, provider: 'Key4Events', keyMask: '•••• ' + k.slice(-4).toUpperCase(), sync: stamp() } }); });
+      S.k4eKey = ''; S.k4eStatus = 'none'; flash('Connected to Key4Events. First sync done.'); return true;
+    },
     syncK4e: function () { upd(function (x) { return Object.assign({}, x, { k4e: Object.assign({}, x.k4e, { sync: stamp() }) }); }); flash('Key4Events synchronised.'); return true; },
-    unlinkK4e: function () { upd(function (x) { return Object.assign({}, x, { k4e: { linked: false } }); }); flash('Group unlinked from Key4Events.'); return true; },
+    unlinkK4e: function () { upd(function (x) { return Object.assign({}, x, { k4e: { linked: false } }); }); S.k4eKey = ''; flash('Integration disconnected.'); return true; },
     newType: function (t) { S.newType = t; },
     openStandalone: function () { flash('Opens the current Meetings Management form.'); return true; },
     createGroup: function () {
