@@ -14,7 +14,7 @@ body{margin:0;font-family:Inter,system-ui,sans-serif;color:#1B2414;font-size:14p
 .s-etsi{--p:#1D5FA8;--pd:#154A85;--ps:#E1EBF7;--acc:#4FA3E3;--bg:#F1F4F8;--hv:#F3F7FC}
 #app{min-height:100vh;background:var(--bg);display:flex;flex-direction:column}
 a{color:var(--pd)}a:hover{color:#1B2414}
-.wrap{max-width:1320px;margin:0 auto;padding:0 24px;width:100%}
+.wrap{max-width:none;margin:0;padding:0 clamp(16px,2.5vw,48px);width:100%}
 .btn{font:inherit;font-size:14px;font-weight:600;border-radius:8px;padding:0 16px;min-height:40px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:1px solid #CBD3C3;background:#fff;color:#1B2414;white-space:nowrap}
 .btn:hover{background:var(--hv)}
 .btn-p{background:var(--p);border-color:var(--p);color:#fff}.btn-p:hover{background:var(--pd)}
