@@ -279,15 +279,17 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
       '<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid #EEF1EA"><h2>Meetings</h2>' +
       (locked ? '' : '<button class="btn btn-p" data-act="toggleAdd" aria-expanded="' + S.addOpen + '">' + I.plus + 'Add meeting</button>') + '</div>';
     if (S.addOpen && !locked) {
-      var pool = S.pool.filter(function (p) { return p.family === g.family; });
-      h += '<div style="background:var(--hv);border-bottom:1px solid #DDE3D6;padding:18px 20px;display:flex;flex-direction:column;gap:14px"><div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="createInGroup">Create a new meeting in this group</button><button class="btn" data-act="cloneFirst"' + dis(!g.meetings.length) + '>Clone first meeting</button></div>' +
-        '<div style="font-size:13px;font-weight:600;color:#3A4334">Or link an existing standalone meeting (' + g.family + ')</div><div style="display:flex;flex-direction:column;gap:8px">';
+      var aq = (S.addQuery || '').trim().toLowerCase();
+      var pool = S.pool.filter(function (p) { return p.family === g.family && (!aq || (p.ref + ' ' + p.body + ' ' + p.location).toLowerCase().indexOf(aq) >= 0); });
+      h += '<div style="background:var(--hv);border-bottom:1px solid #DDE3D6;padding:18px 20px;display:flex;flex-direction:column;gap:14px"><div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="createInGroup">Create a new meeting in this group</button></div>' +
+        '<div style="font-size:13px;font-weight:600;color:#3A4334">Or link an existing standalone meeting (' + g.family + ')</div>' +
+        '<div><label for="addq" class="sr">Search standalone meetings</label><input id="addq" class="inp" type="search" placeholder="Search by meeting, body or location" value="' + esc(S.addQuery || '') + '" data-model="addQuery" data-rerender="1"></div><div style="display:flex;flex-direction:column;gap:8px">';
       pool.forEach(function (p) {
         var warn = p.start < g.start || p.end > g.end;
         h += '<div class="card" style="border-radius:8px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:10px 12px"><span style="flex:1 1 200px;display:flex;flex-direction:column;gap:2px"><span style="font-weight:600">' + p.ref + '</span><span class="muted" style="font-size:12px">' + p.body + ' · ' + range(p.start, p.end) + ' · ' + p.location + '</span></span>' +
           (warn ? '<span style="font-size:12px;color:#8A4510;background:#FCF1E6;padding:3px 8px;border-radius:6px">Dates outside the group</span>' : '') + '<button class="btn" data-act="link" data-arg="' + p.id + '">Link</button></div>';
       });
-      if (!pool.length) h += '<span class="muted" style="font-size:13px">No standalone ' + g.family + ' meeting available.</span>';
+      if (!pool.length) h += '<span class="muted" style="font-size:13px">' + (aq ? 'No standalone meeting matches your search.' : 'No standalone ' + g.family + ' meeting available.') + '</span>';
       h += '</div>' + (isEtsi
         ? '<label style="display:flex;align-items:center;gap:8px;font-weight:500"><input type="checkbox" data-act="toggleNotify"' + (S.notify ? ' checked' : '') + ' style="width:18px;height:18px;accent-color:var(--p)"> Notify registered participants when a meeting is added</label>'
         : '<span class="muted" style="font-size:13px">P3GP: no group-level notification is sent. Participants keep registering per meeting.</span>') + '</div>';
@@ -319,7 +321,9 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
         '<p class="muted" style="margin:0;font-size:13px">Sharing participant data with a host requires the GDPR agreement for this event.</p>' +
         '<button class="btn btn-p" data-act="connectK4e" style="align-self:flex-start"' + dis(locked || !S.k4eKey.trim()) + '>Test and connect</button>';
     }
-    h += '</section></aside></div>';
+    h += '<div style="border-top:1px solid #EEF1EA;padding-top:12px;display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span class="muted" style="font-size:13px">For the integrator: one line per meeting with its title, Key1 and Key2.</span>' +
+      '<button class="btn ttip" data-act="exportList" data-tip="Meeting title, Key1, Key2 (CSV)" aria-label="Export meeting list for the integrator: meeting title, Key1, Key2">' + I.dl + 'Export meeting list</button></div>' +
+      '</section></aside></div>';
     return h;
   }
 
@@ -528,13 +532,25 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     go: function (v) { S.view = v; S.addOpen = false; },
     site: function (s) { S.site = s; S.view = 'list'; S.selId = null; S.addOpen = false; },
     period: function (p) { S.period = p; },
-    open: function (id) { S.view = 'detail'; S.selId = id; S.addOpen = false; S.k4eEventInput = ''; S.k4eKey = ''; S.k4eStatus = 'none'; },
+    open: function (id) { S.view = 'detail'; S.selId = id; S.addOpen = false; S.k4eEventInput = ''; S.k4eKey = ''; S.k4eStatus = 'none'; S.addQuery = ''; },
     exportAll: function () { flash('events_list.xlsx exported (' + exportInfo.n + ' groups, ' + exportInfo.m + ' meetings).'); return true; },
     exportParticipants: function () { var g = sel(); flash(g.title + '_participants_per_meeting.xlsx exported (' + g.meetings.length + ' meetings, ' + fmt(sum(g.meetings, 'f2f') + sum(g.meetings, 'online')) + ' registered participants).'); return true; },
-    toggleAdd: function () { S.addOpen = !S.addOpen; },
+    exportList: function () {
+      var g = sel(), q = function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; };
+      var num = function (id, n) { return String(id).replace(/\D/g, '').padStart(n, '0'); };
+      var rows = [['Meeting title', 'Key1', 'Key2']].concat(g.meetings.map(function (m) { return [m.ref, 'MTG-' + num(m.id, 5), 'EVT-' + num(g.id, 4)]; }));
+      var csv = '\uFEFF' + rows.map(function (r) { return r.map(q).join(';'); }).join('\r\n');
+      var name = g.title.replace(/[^A-Za-z0-9._-]+/g, '_') + '_meeting_list.csv';
+      try {
+        var url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })), a = document.createElement('a');
+        a.href = url; a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      } catch (e) {}
+      flash(name + ' exported (' + g.meetings.length + ' meetings).'); return true;
+    },
+    toggleAdd: function () { S.addOpen = !S.addOpen; S.addQuery = ''; },
     toggleNotify: function () { S.notify = !S.notify; },
     createInGroup: function () { flash('Opens the meeting form with the group values pre-filled. Breadcrumb: ' + sel().title); return true; },
-    cloneFirst: function () { var g = sel(); flash('Opens a copy of ' + g.meetings[0].ref + ' to adjust body, title and dates.'); return true; },
     link: function (id) {
       var g = sel(), p = S.pool.find(function (x) { return x.id === id; });
       upd(function (x) { return Object.assign({}, x, { meetings: x.meetings.concat([p]) }); });
