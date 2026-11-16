@@ -264,7 +264,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     h += '<div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:16px"><div style="display:flex;flex-direction:column;gap:8px;min-width:0"><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">' +
       '<span class="tag" style="' + FAM[g.family] + '">' + g.family + '</span><span class="tag" style="background:#F1F3EE;color:#3A4334;font-weight:600">' + g.kind + '</span><span class="pill" style="' + ST[g.status][1] + '">' + ST[g.status][0] + '</span></div>' +
       '<h1>' + esc(g.title) + '</h1><p class="muted" style="margin:0">' + range(g.start, g.end) + ' · ' + esc(g.location) + '</p></div>' +
-      '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn ttip" data-act="exportParticipants" data-tip="Export all participants per meeting" aria-label="Export all participants per meeting">' + I.dl + 'Export</button></div></div>';
+      '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn ttip" data-act="exportList" data-tip="Meeting title, Key1, Key2 (CSV)" aria-label="Export meeting list: meeting title, Key1, Key2">' + I.dl + 'Export meeting list</button><button class="btn ttip" data-act="exportParticipants" data-tip="All participants per meeting" aria-label="Export participants list: all participants per meeting">' + I.dl + 'Export participants list</button></div></div>';
     if (locked) h += '<div role="status" style="display:flex;gap:12px;align-items:flex-start;background:#F1F3EE;border:1px solid #D5DBCE;border-radius:10px;padding:14px 16px">' + I.lock + '<span><strong>This group has ended and is read-only.</strong> Meetings can no longer be added or detached. Participant lists and attendance stay available for export.</span></div>';
     var pairTile = function (label, f, o, kf, ko) {
       var big = function (k, lab, v) { return '<span style="display:inline-flex;align-items:center;gap:8px;font-size:28px;font-weight:700;color:' + (k === 'f2f' ? CF : CO) + '">' + tip(k, lab) + v + '</span>'; };
@@ -321,9 +321,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
         '<p class="muted" style="margin:0;font-size:13px">Sharing participant data with a host requires the GDPR agreement for this event.</p>' +
         '<button class="btn btn-p" data-act="connectK4e" style="align-self:flex-start"' + dis(locked || !S.k4eKey.trim()) + '>Test and connect</button>';
     }
-    h += '<div style="border-top:1px solid #EEF1EA;padding-top:12px;display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span class="muted" style="font-size:13px">For the integrator: one line per meeting with its title, Key1 and Key2.</span>' +
-      '<button class="btn ttip" data-act="exportList" data-tip="Meeting title, Key1, Key2 (CSV)" aria-label="Export meeting list for the integrator: meeting title, Key1, Key2">' + I.dl + 'Export meeting list</button></div>' +
-      '</section></aside></div>';
+    h += '</section></aside></div>';
     return h;
   }
 
