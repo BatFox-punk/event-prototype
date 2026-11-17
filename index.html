@@ -313,13 +313,13 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     h += '<section class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:12px"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><h2>Integration</h2>' + (g.k4e.linked ? '<span class="pill" style="background:#E6F2DA;color:#2F6610">Connected</span>' : '') + '</div>';
     if (g.k4e.linked) {
       h += '<dl class="kv"><dt>Provider</dt><dd style="font-weight:600">' + esc(g.k4e.provider || 'Key4Events') + '</dd><dt>API key</dt><dd style="font-family:ui-monospace,monospace">' + esc(g.k4e.keyMask || '••••') + '</dd><dt>Last sync</dt><dd>' + esc(g.k4e.sync) + '</dd><dt>Data shared</dt><dd>Meeting list, F2F participants</dd></dl>' +
-        '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="syncK4e">Sync now</button><button class="btn btn-d" data-act="unlinkK4e"' + dis(locked) + '>Disconnect</button></div>';
+        '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="syncK4e">Sync</button><button class="btn btn-d" data-act="unlinkK4e"' + dis(locked) + '>Disconnect</button></div>';
     } else {
       h += '<div class="field"><label for="prov">Provider</label><select id="prov" class="inp" data-model="k4eProvider"' + dis(locked) + '><option selected>Key4Events</option><option disabled>Other providers (coming soon)</option></select></div>' +
         '<div class="field"><label for="k4ekey">API key</label><input id="k4ekey" class="inp" type="password" autocomplete="off" placeholder="Paste the API key from your provider account" value="' + esc(S.k4eKey) + '" data-model="k4eKey" data-rerender="1"' + dis(locked) + '></div>' +
         (S.k4eStatus === 'error' ? '<p role="alert" style="margin:0;font-size:13px;color:#A61B12">The key was rejected. Check it in your provider account and try again.</p>' : '') +
         '<p class="muted" style="margin:0;font-size:13px">Sharing participant data with a host requires the GDPR agreement for this event.</p>' +
-        '<button class="btn btn-p" data-act="connectK4e" style="align-self:flex-start"' + dis(locked || !S.k4eKey.trim()) + '>Test and connect</button>';
+        '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn btn-p" data-act="connectK4e"' + dis(locked || !S.k4eKey.trim()) + '>Test and connect</button><button class="btn ttip" data-act="syncK4e" data-tip="Connect an API key first" disabled aria-label="Sync (connect an API key first)">Sync</button></div>';
     }
     h += '</section></aside></div>';
     return h;
