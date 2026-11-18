@@ -49,6 +49,7 @@ h2{margin:0;font-size:17px;font-weight:700}
 label{font-size:13px;font-weight:600;color:#3A4334}
 .scroll{overflow-x:auto}
 .thead{display:grid;gap:16px;padding:12px 20px;background:#F7F9F4;border-bottom:1px solid #DDE3D6;font-size:12px;font-weight:600;color:#5B6655;text-transform:uppercase;letter-spacing:.4px}
+.glist.ge{grid-template-columns:minmax(0,2.1fr) minmax(140px,1.1fr) minmax(0,.9fr) minmax(0,1.1fr) 76px 60px 60px 60px 60px 112px 124px}
 .glist{grid-template-columns:minmax(0,2.3fr) minmax(150px,1.2fr) minmax(0,1fr) minmax(0,1.2fr) 80px 64px 64px 64px 64px 140px 24px}
 .mlist{grid-template-columns:minmax(0,1.6fr) minmax(0,1.3fr) 64px 64px 64px 64px 96px;gap:12px}
 .row{font:inherit;text-align:left;width:100%;border:0;border-bottom:1px solid #EEF1EA;background:#fff;cursor:pointer;color:inherit;display:grid;gap:16px;align-items:center;padding:16px 20px}
@@ -75,6 +76,10 @@ dl.kv dt{color:#5B6655}dl.kv dd{margin:0}
 .ibtn:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
 .chev{transition:transform .15s}
 .open .chev{transform:rotate(90deg)}
+.pm{position:absolute;top:calc(100% + 6px);right:0;min-width:270px;background:#fff;border:1px solid #DDE3D6;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.16);padding:6px;z-index:30;display:flex;flex-direction:column}
+.pm button{font:inherit;text-align:left;background:transparent;color:#1B2414;border:0;border-radius:8px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px;font-size:14px;font-weight:600}
+.pm button span{font-size:12px;font-weight:400;color:#5B6655}
+.pm button:hover{background:var(--hv)}
 .chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:#F1F3EE;color:#3A4334;border:0;font-family:inherit}
 button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd)}
 </style>
@@ -84,71 +89,71 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
 <script>
 (function () {
   var M = function (id, ref, body, s, e, loc, f2f, on, af, ao) { return { id: id, ref: ref, body: body, start: s, end: e, location: loc, f2f: f2f, online: on, attF2f: af || 0, attOnline: ao || 0 }; };
-  var STO = 'Stockholm, SE', GOT = 'Gothenburg Metropolitan Area, SE', SOP = 'ISET premises, Sophia Antipolis, FR';
+  var STO = 'Stockholm, SE', GOT = 'Gothenburg Metropolitan Area, SE', SOP = 'ETSI premises, Sophia Antipolis, FR';
   var S = {
-    view: 'list', site: 'P3GP', mGroup: 'All', mPeriod: '1y', mLoc: 'All', mSort: 'date', mOrder: 'asc', mQuery: '', mOpen: {}, period: 'upcoming', query: '', selId: null, addOpen: false, notify: true, toast: '',
+    view: 'list', site: '3GPP', mPage: 1, mPer: 10, role: 'creator', myAll: false, myReg: { m31: 'Face to face', n25: 'Online', n18: 'Online' }, mtgId: null, linkGid: '', ePage: 1, ePer: 10, menuOpen: false, rowMenu: null, rowPos: { top: 0, right: 0 }, newFamily: 'ETSI', newRegClose: '', newInfo: '', newContact: '', nmGid: null, nmTitle: '', nmCat: 'Bodies', nmBody: '', nmStart: '', nmEnd: '', nmRegStart: 'As soon as published', nmRegClose: '', nmLoc: '', nmContact: '', nmInfo: '', regGid: null, regSel: {}, regStep: 1, regMode: {}, mGroup: 'All', mPeriod: '1y', mLoc: 'All', mSort: 'date', mOrder: 'asc', mQuery: '', mOpen: {}, period: 'upcoming', kind: 'All', query: '', selId: null, addOpen: false, notify: true, toast: '',
     k4eKey: '', k4eStatus: 'none', k4eProvider: 'Key4Events', k4eEventInput: '', newType: 'mgroup', newTitle: '', newLoc: '', newStart: '', newEnd: '',
     groups: [
-      { id: 'g1', title: '2027-April-EU-CT SA WGs', family: 'P3GP', kind: 'Meeting group', start: '2027-04-19', end: '2027-04-23', location: STO, regStart: 'As soon as published', regClose: '5 Apr 2027', contact: 'Meeting support (ISET)', status: 'upcoming', k4e: { linked: false },
-        meetings: [M('m1','CT1#166','P3GP CT 1','2027-04-19','2027-04-23',STO,12,1), M('m2','CT3#152','P3GP CT 3','2027-04-19','2027-04-23',STO,9,0), M('m3','CT4#140','P3GP CT 4','2027-04-19','2027-04-23',STO,8,0), M('m4','SA2#180','P3GP SA 2','2027-04-19','2027-04-23',STO,37,5), M('m5','SA3#133','P3GP SA 3','2027-04-19','2027-04-23',STO,20,2), M('m6','SA5#172','P3GP SA 5','2027-04-19','2027-04-23',STO,10,0), M('m7','SA5#172-CH SWG','P3GP SA 5','2027-04-19','2027-04-23',STO,2,0), M('m8','SA6#78','P3GP SA 6','2027-04-19','2027-04-23',STO,10,2)] },
-      { id: 'g3', title: '2027-June-Sophia-ISET ISG WGs', family: 'ISET', kind: 'Meeting group', start: '2027-06-07', end: '2027-06-11', location: SOP, regStart: '1 Mar 2027', regClose: '24 May 2027', contact: 'Meeting support (ISET)', status: 'upcoming', k4e: { linked: false },
-        meetings: [M('m20','ISG ENI#33','ISET ISG ENI','2027-06-07','2027-06-09',SOP,24,9), M('m21','ISG ZSM#36','ISET ISG ZSM','2027-06-08','2027-06-10',SOP,31,12), M('m22','ISG MEC#40','ISET ISG MEC','2027-06-09','2027-06-11',SOP,46,17)] },
-      { id: 'g4', title: '2026-11-Sophia-ISET TC CYBER & ISG SAI', family: 'ISET', kind: 'Meeting group', start: '2026-11-09', end: '2026-11-20', location: SOP, regStart: 'As soon as published', regClose: '2 Nov 2026', contact: 'Meeting support (ISET)', status: 'ongoing', k4e: { linked: false },
-        meetings: [M('m30','CYBER#47','ISET TC CYBER','2026-11-09','2026-11-12',SOP,68,41,61,37), M('m31','SAI#29','ISET ISG SAI','2026-11-16','2026-11-20',SOP,39,22)] },
-      { id: 'g5', title: '2026-05-Berlin-ISET NFV & MEC', family: 'ISET', kind: 'Meeting group', start: '2026-05-11', end: '2026-05-15', location: 'Berlin, DE', regStart: 'As soon as published', regClose: '27 Apr 2026', contact: 'Meeting support (ISET)', status: 'ended', k4e: { linked: false },
-        meetings: [M('m40','NFV#58','ISET ISG NFV','2026-05-11','2026-05-15','Berlin, DE',112,46,98,39), M('m41','MEC#37','ISET ISG MEC','2026-05-11','2026-05-13','Berlin, DE',57,21,49,18)] },
-      { id: 'g2', title: '2026-02-Goteborg-RAN WGs', family: 'P3GP', kind: 'Meeting group', start: '2026-02-09', end: '2026-02-13', location: GOT, regStart: 'As soon as published', regClose: '26 Jan 2026', contact: 'Meeting support (ISET)', status: 'ended', k4e: { linked: true, provider: 'Key4Events', keyMask: '•••• 7F2A', sync: '13 Feb 2026, 18:02' },
-        meetings: [M('m10','P3GPRAN1#124','P3GP RAN 1','2026-02-09','2026-02-13',GOT,926,305,699,0), M('m11','P3GPRAN2#133','P3GP RAN 2','2026-02-09','2026-02-13',GOT,538,169,446,0), M('m12','P3GPRAN3#131','P3GP RAN 3','2026-02-09','2026-02-13',GOT,326,50,279,0), M('m13','P3GPRAN4#118','P3GP RAN 4','2026-02-09','2026-02-13',GOT,462,47,383,0), M('m14','P3GPRAN5#110','P3GP RAN 5','2026-02-09','2026-02-13',GOT,198,34,170,0)] }
+      { id: 'g1', title: '2027-April-EU-CT SA WGs', family: '3GPP', kind: 'Meeting group', start: '2027-04-19', end: '2027-04-23', location: STO, regStart: 'As soon as published', regClose: '5 Apr 2027', contact: 'Meeting support (ETSI)', status: 'upcoming', k4e: { linked: false },
+        meetings: [M('m1','CT1#166','3GPP CT 1','2027-04-19','2027-04-23',STO,12,1), M('m2','CT3#152','3GPP CT 3','2027-04-19','2027-04-23',STO,9,0), M('m3','CT4#140','3GPP CT 4','2027-04-19','2027-04-23',STO,8,0), M('m4','SA2#180','3GPP SA 2','2027-04-19','2027-04-23',STO,37,5), M('m5','SA3#133','3GPP SA 3','2027-04-19','2027-04-23',STO,20,2), M('m6','SA5#172','3GPP SA 5','2027-04-19','2027-04-23',STO,10,0), M('m7','SA5#172-CH SWG','3GPP SA 5','2027-04-19','2027-04-23',STO,2,0), M('m8','SA6#78','3GPP SA 6','2027-04-19','2027-04-23',STO,10,2)] },
+      { id: 'g3', title: '2027-June-Sophia-ETSI ISG WGs', family: 'ETSI', kind: 'Meeting group', start: '2027-06-07', end: '2027-06-11', location: SOP, regStart: '1 Mar 2027', regClose: '24 May 2027', contact: 'Meeting support (ETSI)', status: 'upcoming', k4e: { linked: false },
+        meetings: [M('m20','ISG ENI#33','ETSI ISG ENI','2027-06-07','2027-06-09',SOP,24,9), M('m21','ISG ZSM#36','ETSI ISG ZSM','2027-06-08','2027-06-10',SOP,31,12), M('m22','ISG MEC#40','ETSI ISG MEC','2027-06-09','2027-06-11',SOP,46,17)] },
+      { id: 'g4', title: '2026-11-Sophia-ETSI TC CYBER & ISG SAI', family: 'ETSI', kind: 'Meeting group', start: '2026-11-09', end: '2026-11-20', location: SOP, regStart: 'As soon as published', regClose: '2 Nov 2026', contact: 'Meeting support (ETSI)', status: 'ongoing', k4e: { linked: false },
+        meetings: [M('m30','CYBER#47','ETSI TC CYBER','2026-11-09','2026-11-12',SOP,68,41,61,37), M('m31','SAI#29','ETSI ISG SAI','2026-11-16','2026-11-20',SOP,39,22)] },
+      { id: 'g5', title: '2026-05-Berlin-ETSI NFV & MEC', family: 'ETSI', kind: 'Meeting group', start: '2026-05-11', end: '2026-05-15', location: 'Berlin, DE', regStart: 'As soon as published', regClose: '27 Apr 2026', contact: 'Meeting support (ETSI)', status: 'ended', k4e: { linked: false },
+        meetings: [M('m40','NFV#58','ETSI ISG NFV','2026-05-11','2026-05-15','Berlin, DE',112,46,98,39), M('m41','MEC#37','ETSI ISG MEC','2026-05-11','2026-05-13','Berlin, DE',57,21,49,18)] },
+      { id: 'g2', title: '2026-02-Goteborg-RAN WGs', family: '3GPP', kind: 'Meeting group', start: '2026-02-09', end: '2026-02-13', location: GOT, regStart: 'As soon as published', regClose: '26 Jan 2026', contact: 'Meeting support (ETSI)', status: 'ended', k4e: { linked: true, provider: 'Key4Events', keyMask: '•••• 7F2A', sync: '13 Feb 2026, 18:02' },
+        meetings: [M('m10','3GPPRAN1#124','3GPP RAN 1','2026-02-09','2026-02-13',GOT,926,305,699,0), M('m11','3GPPRAN2#133','3GPP RAN 2','2026-02-09','2026-02-13',GOT,538,169,446,0), M('m12','3GPPRAN3#131','3GPP RAN 3','2026-02-09','2026-02-13',GOT,326,50,279,0), M('m13','3GPPRAN4#118','3GPP RAN 4','2026-02-09','2026-02-13',GOT,462,47,383,0), M('m14','3GPPRAN5#110','3GPP RAN 5','2026-02-09','2026-02-13',GOT,198,34,170,0)] }
     ],
     pool: [
-      Object.assign(M('p1','SA1#118','P3GP SA 1','2027-04-19','2027-04-23',STO,14,3), { family: 'P3GP' }),
-      Object.assign(M('p2','SA4#140','P3GP SA 4','2027-04-19','2027-04-23',STO,22,6), { family: 'P3GP' }),
-      Object.assign(M('p3','CT6#132','P3GP CT 6','2027-05-10','2027-05-14','Online',0,18), { family: 'P3GP' }),
-      Object.assign(M('p4','CYBER#48','ISET TC CYBER','2027-06-08','2027-06-10',SOP,41,26), { family: 'ISET' }),
-      Object.assign(M('p5','ISG ISI#22','ISET ISG ISI','2027-07-05','2027-07-07','Online',0,14), { family: 'ISET' })
+      Object.assign(M('p1','SA1#118','3GPP SA 1','2027-04-19','2027-04-23',STO,14,3), { family: '3GPP' }),
+      Object.assign(M('p2','SA4#140','3GPP SA 4','2027-04-19','2027-04-23',STO,22,6), { family: '3GPP' }),
+      Object.assign(M('p3','CT6#132','3GPP CT 6','2027-05-10','2027-05-14','Online',0,18), { family: '3GPP' }),
+      Object.assign(M('p4','CYBER#48','ETSI TC CYBER','2027-06-08','2027-06-10',SOP,41,26), { family: 'ETSI' }),
+      Object.assign(M('p5','ISG ISI#22','ETSI ISG ISI','2027-07-05','2027-07-07','Online',0,14), { family: 'ETSI' })
     ]
   };
 
   (function () {
     var G = function (id, title, s0, e0, loc, regStart, regClose, status, ms) {
-      return { id: id, title: title, family: 'P3GP', kind: 'Meeting group', start: s0, end: e0, location: loc, regStart: regStart, regClose: regClose, contact: 'Meeting support (ISET)', status: status, k4e: { linked: false }, meetings: ms };
+      return { id: id, title: title, family: '3GPP', kind: 'Meeting group', start: s0, end: e0, location: loc, regStart: regStart, regClose: regClose, contact: 'Meeting support (ETSI)', status: status, k4e: { linked: false }, meetings: ms };
     };
     var TPE = 'Taipei, TW';
     S.groups = S.groups.concat([
       G('g20', '2026-11-Taipei-SA WGs', '2026-11-16', '2026-11-20', TPE, 'As soon as published', '2 Nov 2026', 'ongoing', [
-        M('m141', 'SA1#117', 'P3GP SA 1', '2026-11-16', '2026-11-20', TPE, 52, 24), M('m142', 'SA2#182', 'P3GP SA 2', '2026-11-16', '2026-11-20', TPE, 131, 47),
-        M('m143', 'SA3#135', 'P3GP SA 3', '2026-11-16', '2026-11-20', TPE, 76, 21), M('m144', 'SA5#173', 'P3GP SA 5', '2026-11-17', '2026-11-20', TPE, 64, 29)])
+        M('m141', 'SA1#117', '3GPP SA 1', '2026-11-16', '2026-11-20', TPE, 52, 24), M('m142', 'SA2#182', '3GPP SA 2', '2026-11-16', '2026-11-20', TPE, 131, 47),
+        M('m143', 'SA3#135', '3GPP SA 3', '2026-11-16', '2026-11-20', TPE, 76, 21), M('m144', 'SA5#173', '3GPP SA 5', '2026-11-17', '2026-11-20', TPE, 64, 29)])
     ]);
     var FUK = 'Fukuoka, JP', DUB = 'Dublin, IE';
     S.groups = S.groups.concat([
       G('g18', '2026-05-Fukuoka-RAN WGs', '2026-05-18', '2026-05-22', FUK, 'As soon as published', '4 May 2026', 'ended', [
-        M('m121', 'RAN1#126', 'P3GP RAN 1', '2026-05-18', '2026-05-22', FUK, 588, 137, 531, 0), M('m122', 'RAN2#135', 'P3GP RAN 2', '2026-05-18', '2026-05-22', FUK, 329, 84, 297, 0),
-        M('m123', 'RAN3#133', 'P3GP RAN 3', '2026-05-18', '2026-05-22', FUK, 205, 58, 184, 0), M('m124', 'RAN4#120', 'P3GP RAN 4', '2026-05-18', '2026-05-22', FUK, 362, 69, 331, 0)]),
+        M('m121', 'RAN1#126', '3GPP RAN 1', '2026-05-18', '2026-05-22', FUK, 588, 137, 531, 0), M('m122', 'RAN2#135', '3GPP RAN 2', '2026-05-18', '2026-05-22', FUK, 329, 84, 297, 0),
+        M('m123', 'RAN3#133', '3GPP RAN 3', '2026-05-18', '2026-05-22', FUK, 205, 58, 184, 0), M('m124', 'RAN4#120', '3GPP RAN 4', '2026-05-18', '2026-05-22', FUK, 362, 69, 331, 0)]),
       G('g19', '2026-08-Dublin-SA CT WGs', '2026-08-24', '2026-08-28', DUB, 'As soon as published', '10 Aug 2026', 'ended', [
-        M('m131', 'SA2#181', 'P3GP SA 2', '2026-08-24', '2026-08-28', DUB, 114, 38, 103, 0), M('m132', 'SA3#134', 'P3GP SA 3', '2026-08-24', '2026-08-28', DUB, 69, 17, 63, 0),
-        M('m133', 'CT1#167', 'P3GP CT 1', '2026-08-24', '2026-08-28', DUB, 44, 11, 40, 0), M('m134', 'CT4#141', 'P3GP CT 4', '2026-08-25', '2026-08-28', DUB, 27, 9, 25, 0)])
+        M('m131', 'SA2#181', '3GPP SA 2', '2026-08-24', '2026-08-28', DUB, 114, 38, 103, 0), M('m132', 'SA3#134', '3GPP SA 3', '2026-08-24', '2026-08-28', DUB, 69, 17, 63, 0),
+        M('m133', 'CT1#167', '3GPP CT 1', '2026-08-24', '2026-08-28', DUB, 44, 11, 40, 0), M('m134', 'CT4#141', '3GPP CT 4', '2026-08-25', '2026-08-28', DUB, 27, 9, 25, 0)])
     ]);
     var PRG = 'Prague, CZ', BLR = 'Bangalore, IN', ATH = 'Athens, GR', TYO = 'Tokyo, JP', LIS = 'Lisbon, PT', SZX = 'Shenzhen, CN', SEL = 'Seoul, KR';
     S.groups = S.groups.concat([
       G('g11', '2027-02-Prague-RAN WGs', '2027-02-15', '2027-02-19', PRG, 'As soon as published', '1 Feb 2027', 'upcoming', [
-        M('m51', 'RAN1#128', 'P3GP RAN 1', '2027-02-15', '2027-02-19', PRG, 612, 148), M('m52', 'RAN2#137', 'P3GP RAN 2', '2027-02-15', '2027-02-19', PRG, 341, 96),
-        M('m53', 'RAN3#135', 'P3GP RAN 3', '2027-02-15', '2027-02-19', PRG, 214, 61), M('m54', 'RAN4#122', 'P3GP RAN 4', '2027-02-15', '2027-02-19', PRG, 387, 74)]),
+        M('m51', 'RAN1#128', '3GPP RAN 1', '2027-02-15', '2027-02-19', PRG, 612, 148), M('m52', 'RAN2#137', '3GPP RAN 2', '2027-02-15', '2027-02-19', PRG, 341, 96),
+        M('m53', 'RAN3#135', '3GPP RAN 3', '2027-02-15', '2027-02-19', PRG, 214, 61), M('m54', 'RAN4#122', '3GPP RAN 4', '2027-02-15', '2027-02-19', PRG, 387, 74)]),
       G('g12', '2027-05-Bangalore-SA WGs', '2027-05-10', '2027-05-14', BLR, '1 Mar 2027', '26 Apr 2027', 'upcoming', [
-        M('m61', 'SA1#119', 'P3GP SA 1', '2027-05-10', '2027-05-14', BLR, 58, 22), M('m62', 'SA2#183', 'P3GP SA 2', '2027-05-10', '2027-05-14', BLR, 122, 41),
-        M('m63', 'SA3#135', 'P3GP SA 3', '2027-05-10', '2027-05-14', BLR, 74, 19), M('m64', 'SA5#174', 'P3GP SA 5', '2027-05-11', '2027-05-14', BLR, 63, 27)]),
+        M('m61', 'SA1#119', '3GPP SA 1', '2027-05-10', '2027-05-14', BLR, 58, 22), M('m62', 'SA2#183', '3GPP SA 2', '2027-05-10', '2027-05-14', BLR, 122, 41),
+        M('m63', 'SA3#135', '3GPP SA 3', '2027-05-10', '2027-05-14', BLR, 74, 19), M('m64', 'SA5#174', '3GPP SA 5', '2027-05-11', '2027-05-14', BLR, 63, 27)]),
       G('g13', '2027-08-Athens-CT WGs', '2027-08-23', '2027-08-27', ATH, '1 Jun 2027', '9 Aug 2027', 'upcoming', [
-        M('m71', 'CT1#169', 'P3GP CT 1', '2027-08-23', '2027-08-27', ATH, 46, 12), M('m72', 'CT3#155', 'P3GP CT 3', '2027-08-23', '2027-08-27', ATH, 31, 8),
-        M('m73', 'CT4#143', 'P3GP CT 4', '2027-08-24', '2027-08-27', ATH, 29, 10)]),
+        M('m71', 'CT1#169', '3GPP CT 1', '2027-08-23', '2027-08-27', ATH, 46, 12), M('m72', 'CT3#155', '3GPP CT 3', '2027-08-23', '2027-08-27', ATH, 31, 8),
+        M('m73', 'CT4#143', '3GPP CT 4', '2027-08-24', '2027-08-27', ATH, 29, 10)]),
       G('g14', '2027-11-Tokyo-RAN WGs', '2027-11-08', '2027-11-12', TYO, '1 Sep 2027', '25 Oct 2027', 'upcoming', [
-        M('m81', 'RAN1#130', 'P3GP RAN 1', '2027-11-08', '2027-11-12', TYO, 701, 132), M('m82', 'RAN2#139', 'P3GP RAN 2', '2027-11-08', '2027-11-12', TYO, 402, 88),
-        M('m83', 'RAN3#137', 'P3GP RAN 3', '2027-11-08', '2027-11-12', TYO, 256, 54), M('m84', 'RAN5#118', 'P3GP RAN 5', '2027-11-09', '2027-11-12', TYO, 167, 36)]),
+        M('m81', 'RAN1#130', '3GPP RAN 1', '2027-11-08', '2027-11-12', TYO, 701, 132), M('m82', 'RAN2#139', '3GPP RAN 2', '2027-11-08', '2027-11-12', TYO, 402, 88),
+        M('m83', 'RAN3#137', '3GPP RAN 3', '2027-11-08', '2027-11-12', TYO, 256, 54), M('m84', 'RAN5#118', '3GPP RAN 5', '2027-11-09', '2027-11-12', TYO, 167, 36)]),
       G('g15', '2028-02-Lisbon-SA WGs', '2028-02-14', '2028-02-18', LIS, '1 Dec 2027', '31 Jan 2028', 'upcoming', [
-        M('m91', 'SA2#187', 'P3GP SA 2', '2028-02-14', '2028-02-18', LIS, 0, 0), M('m92', 'SA4#150', 'P3GP SA 4', '2028-02-14', '2028-02-18', LIS, 0, 0), M('m93', 'SA6#82', 'P3GP SA 6', '2028-02-15', '2028-02-18', LIS, 0, 0)]),
+        M('m91', 'SA2#187', '3GPP SA 2', '2028-02-14', '2028-02-18', LIS, 0, 0), M('m92', 'SA4#150', '3GPP SA 4', '2028-02-14', '2028-02-18', LIS, 0, 0), M('m93', 'SA6#82', '3GPP SA 6', '2028-02-15', '2028-02-18', LIS, 0, 0)]),
       G('g16', '2028-05-Shenzhen-RAN WGs', '2028-05-15', '2028-05-19', SZX, '1 Mar 2028', '1 May 2028', 'upcoming', [
-        M('m101', 'RAN1#134', 'P3GP RAN 1', '2028-05-15', '2028-05-19', SZX, 0, 0), M('m102', 'RAN2#143', 'P3GP RAN 2', '2028-05-15', '2028-05-19', SZX, 0, 0),
-        M('m103', 'RAN4#128', 'P3GP RAN 4', '2028-05-15', '2028-05-19', SZX, 0, 0)]),
+        M('m101', 'RAN1#134', '3GPP RAN 1', '2028-05-15', '2028-05-19', SZX, 0, 0), M('m102', 'RAN2#143', '3GPP RAN 2', '2028-05-15', '2028-05-19', SZX, 0, 0),
+        M('m103', 'RAN4#128', '3GPP RAN 4', '2028-05-15', '2028-05-19', SZX, 0, 0)]),
       G('g17', '2028-08-Seoul-CT SA WGs', '2028-08-21', '2028-08-25', SEL, '1 Jun 2028', '7 Aug 2028', 'upcoming', [
-        M('m111', 'CT1#177', 'P3GP CT 1', '2028-08-21', '2028-08-25', SEL, 0, 0), M('m112', 'SA3#141', 'P3GP SA 3', '2028-08-21', '2028-08-25', SEL, 0, 0), M('m113', 'SA5#180', 'P3GP SA 5', '2028-08-22', '2028-08-25', SEL, 0, 0)])
+        M('m111', 'CT1#177', '3GPP CT 1', '2028-08-21', '2028-08-25', SEL, 0, 0), M('m112', 'SA3#141', '3GPP SA 3', '2028-08-21', '2028-08-25', SEL, 0, 0), M('m113', 'SA5#180', '3GPP SA 5', '2028-08-22', '2028-08-25', SEL, 0, 0)])
     ]);
   })();
 
@@ -161,6 +166,25 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
       g20: { itSupport: 'Wei-Ling Chen (host IT)', info: 'Registration desk opens at 8:00 on Monday. Online participants use the links in their confirmation email.' }
     };
     S.groups.forEach(function (g) { Object.assign(g, D[g.id] || {}); });
+
+    var X = function (id, title, fam, kind, s0, e0, loc, regClose, ms, extra) {
+      return Object.assign({ id: id, title: title, family: fam, kind: kind, start: s0, end: e0, location: loc, regStart: 'As soon as published', regClose: regClose, contact: 'Meeting support (ETSI)', status: 'upcoming', k4e: { linked: false }, meetings: ms }, extra || {});
+    };
+    var EG = 'Event group', SM = 'Standalone meeting', MG = 'Meeting group', SPH = 'ETSI premises, Sophia Antipolis, FR';
+    S.groups = S.groups.concat([
+      X('e5', '2027-Mar-ETSI Security Conference-Sophia', 'ETSI', EG, '2027-03-23', '2027-03-25', SPH, '9 Mar 2027', [
+        M('n15', 'Security Conference day 1', 'ETSI Conference', '2027-03-23', '2027-03-23', SPH, 180, 95), M('n16', 'Security Conference day 2', 'ETSI Conference', '2027-03-24', '2027-03-24', SPH, 172, 88), M('n17', 'Security Conference day 3', 'ETSI Conference', '2027-03-25', '2027-03-25', SPH, 140, 70)],
+        { info: 'Posters session on Wednesday evening.' }),
+      X('e6', '2026-12-Webinar Series AI Standards-Online', 'ETSI', EG, '2026-12-01', '2026-12-17', 'Online', '27 Nov 2026', [
+        M('n18', 'Webinar AI #1', 'ETSI Webinar', '2026-12-01', '2026-12-01', 'Online', 0, 210), M('n19', 'Webinar AI #2', 'ETSI Webinar', '2026-12-09', '2026-12-09', 'Online', 0, 187), M('n20', 'Webinar AI #3', 'ETSI Webinar', '2026-12-17', '2026-12-17', 'Online', 0, 164)]),
+      X('e7', '2026-02-ETSI Summit-Brussels', 'ETSI', EG, '2026-02-17', '2026-02-18', 'Brussels, BE', '3 Feb 2026', [
+        M('n21', 'ETSI Summit day 1', 'ETSI Summit', '2026-02-17', '2026-02-17', 'Brussels, BE', 260, 80, 244, 77), M('n22', 'ETSI Summit day 2', 'ETSI Summit', '2026-02-18', '2026-02-18', 'Brussels, BE', 241, 66, 229, 61)]),
+      X('e8', '2027-Sep-Valencia-ETSI TC ITS & ISG ARF', 'ETSI', MG, '2027-09-13', '2027-09-17', 'Valencia, ES', '30 Aug 2027', [
+        M('n23', 'TC ITS#52', 'ETSI TC ITS', '2027-09-13', '2027-09-15', 'Valencia, ES', 85, 30), M('n24', 'ISG ARF#9', 'ETSI ISG ARF', '2027-09-15', '2027-09-17', 'Valencia, ES', 54, 21)]),
+      X('s5', 'ISG ENI#34 Ad hoc-Online', 'ETSI', SM, '2026-12-03', '2026-12-04', 'Online', '30 Nov 2026', [M('n25', 'ISG ENI#34-e', 'ETSI ISG ENI', '2026-12-03', '2026-12-04', 'Online', 0, 36)]),
+      X('s6', 'TC ESI#88-Sophia', 'ETSI', SM, '2027-01-26', '2027-01-28', SPH, '12 Jan 2027', [M('n26', 'TC ESI#88', 'ETSI TC ESI', '2027-01-26', '2027-01-28', SPH, 48, 25)]),
+      X('s7', 'ISG SAI#30-Online', 'ETSI', SM, '2026-10-06', '2026-10-07', 'Online', '2 Oct 2026', [M('n27', 'ISG SAI#30-e', 'ETSI ISG SAI', '2026-10-06', '2026-10-07', 'Online', 0, 44, 0, 41)])
+    ]);
   })();
   var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function pd(x) { var a = x.split('-').map(Number); return { y: a[0], m: a[1], d: a[2] }; }
@@ -177,9 +201,19 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
   };
   var pic = function (k, sz) { return '<svg aria-hidden="true" width="' + (sz || 18) + '" height="' + (sz || 18) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + PIC[k] + '</svg>'; };
   var CF = '#1F4F8F', CO = '#8A4510';
+  var ICX = {
+    c: '<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M15.2 9.2a4 4 0 1 0 0 5.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>',
+    reg: '<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6v-2.4h6V5.4h-6z"/><path d="M3 10.2h6.2V6.5L15 12l-5.8 5.5v-3.7H3z"/></svg>',
+    more: '<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'
+  };
+  var ib = function (svg, label, a, arg, off) { return '<button class="ibtn" data-act="' + a + '" data-arg="' + esc(arg) + '" aria-label="' + label + '" title="' + label + '" style="color:#1B1B1B' + (off ? ';opacity:.3' : '') + '"' + (off ? ' disabled' : '') + '>' + svg + '</button>'; };
   var tip = function (k, label) { return '<span class="tip" tabindex="0" role="img" aria-label="' + label + '" data-tip="' + label + '" style="color:' + (k === 'f2f' ? CF : CO) + '">' + pic(k) + '</span>'; };
-  var CTRY = { SE: 'Sweden', FR: 'France', DE: 'Germany', CZ: 'Czechia', IN: 'India', GR: 'Greece', JP: 'Japan', PT: 'Portugal', CN: 'China', KR: 'South Korea', IE: 'Ireland', TW: 'Taiwan' };
+  var CTRY = { SE: 'Sweden', FR: 'France', DE: 'Germany', CZ: 'Czechia', IN: 'India', GR: 'Greece', JP: 'Japan', PT: 'Portugal', CN: 'China', KR: 'South Korea', IE: 'Ireland', TW: 'Taiwan', AT: 'Austria', BE: 'Belgium', ES: 'Spain', CA: 'Canada' };
   var FLG = {
+    AT: '<rect width="22" height="16" fill="#ED2939"/><rect y="5.33" width="22" height="5.34" fill="#fff"/>',
+    BE: '<rect width="7.4" height="16" fill="#000"/><rect x="7.3" width="7.4" height="16" fill="#FAE042"/><rect x="14.6" width="7.4" height="16" fill="#ED2939"/>',
+    ES: '<rect width="22" height="16" fill="#AA151B"/><rect y="4" width="22" height="8" fill="#F1BF00"/>',
+    CA: '<rect width="22" height="16" fill="#fff"/><rect width="5.5" height="16" fill="#D52B1E"/><rect x="16.5" width="5.5" height="16" fill="#D52B1E"/><path d="M11 3l1.2 2.6 2-.8-.8 4 1.6-.8.4 1.4-3.2 2.4.2 1.8h-2.8l.2-1.8L7.4 9.4 7.8 8l1.6.8-.8-4 2 .8z" fill="#D52B1E"/>',
     SE: '<rect width="22" height="16" fill="#006AA7"/><rect x="6" width="3.5" height="16" fill="#FECC00"/><rect y="6.25" width="22" height="3.5" fill="#FECC00"/>',
     FR: '<rect width="7.4" height="16" fill="#0055A4"/><rect x="7.3" width="7.4" height="16" fill="#fff"/><rect x="14.6" width="7.4" height="16" fill="#EF4135"/>',
     DE: '<rect width="22" height="5.4" fill="#000"/><rect y="5.3" width="22" height="5.4" fill="#DD0000"/><rect y="10.6" width="22" height="5.4" fill="#FFCE00"/>',
@@ -205,7 +239,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
   function sum(ms, k) { return ms.reduce(function (t, m) { return t + m[k]; }, 0); }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function stamp() { var d = new Date(); return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear() + ', ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
-  var FAM = { ISET: 'background:#E3ECF8;color:#1D4E89', 'P3GP': 'background:#E6F2DA;color:#2F6610' };
+  var FAM = { ETSI: 'background:#E3ECF8;color:#1D4E89', '3GPP': 'background:#E6F2DA;color:#2F6610' };
   var ST = { upcoming: ['Upcoming', 'background:#E3ECF8;color:#1D4E89'], ongoing: ['Ongoing', 'background:#FCF1E6;color:#8A4510'], ended: ['Ended', 'background:#ECEEEA;color:#4A5245'] };
   var I = {
     dl: '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>',
@@ -229,6 +263,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
       if (g.family !== S.site) return false;
       if (S.period === 'upcoming' && g.status === 'ended') return false;
       if (S.period === 'past' && g.status !== 'ended') return false;
+      if (S.site === 'ETSI' && S.kind !== 'All' && g.kind !== S.kind) return false;
       if (q && (g.title + ' ' + g.location + ' ' + g.meetings.map(function (m) { return m.ref; }).join(' ')).toLowerCase().indexOf(q) < 0) return false;
       return true;
     });
@@ -236,31 +271,60 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
 
   function viewList() {
     var gs = filtered().slice().sort(function (a, b) { return a.start < b.start ? -1 : a.start > b.start ? 1 : 0; }), all = [].concat.apply([], gs.map(function (g) { return g.meetings; }));
-    var h = '<div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px"><div style="display:flex;flex-direction:column;gap:4px"><h1>Events</h1><p class="muted" style="margin:0">' + S.site + ' meeting groups and event groups</p></div>' +
-      '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="exportAll">' + I.dl + 'Export list</button><button class="btn btn-p" data-act="go" data-arg="new">' + I.plus + 'New</button></div></div>';
+    var eper = Number(S.ePer) || 10, epages = Math.max(1, Math.ceil(gs.length / eper)), total = gs.length;
+    if (S.ePage > epages) S.ePage = epages; if (S.ePage < 1) S.ePage = 1;
+    if (S.site === 'ETSI') gs = gs.slice((S.ePage - 1) * eper, S.ePage * eper);
+    var h = '<div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px"><div style="display:flex;flex-direction:column;gap:4px"><h1>' + (S.site === 'ETSI' ? 'Meetings' : 'Events') + '</h1>' + (S.site === 'ETSI' ? '<div class="muted" style="margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:14px"><span><strong style="color:#1B2414">' + gs.length + '</strong> meeting' + (gs.length === 1 ? '' : 's') + '</span><span aria-hidden="true">·</span><span>' + epages + ' page' + (epages === 1 ? '' : 's') + '</span><span aria-hidden="true">·</span><label for="epp" style="display:flex;align-items:center;gap:6px">Show <select id="epp" class="inp" data-model="ePer" data-rerender="1" style="min-height:32px;padding:0 8px;width:auto">' + [5, 10, 25, 50].map(function (n) { return '<option value="' + n + '"' + (eper === n ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select> per page</label></div>' : '') + '</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="exportAll">' + I.dl + 'Export list</button>' + (S.site === 'ETSI' ? (S.role === 'creator' ? newMenu('New', true) : '') : '<button class="btn btn-p" data-act="go" data-arg="new">' + I.plus + 'New</button>') + '</div></div>';
     h += '<div class="card" style="padding:14px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px"><div class="segs" role="group" aria-label="Period">' +
       [['upcoming', 'Upcoming'], ['past', 'Ended'], ['all', 'All']].map(function (p) { return '<button class="seg' + (S.period === p[0] ? ' on' : '') + '" data-act="period" data-arg="' + p[0] + '">' + p[1] + '</button>'; }).join('') +
-      '</div><div style="flex:1 1 240px"><label for="q" class="sr">Search</label><input id="q" class="inp" type="search" placeholder="Search group, meeting or location" value="' + esc(S.query) + '" data-model="query" data-rerender="1"></div></div>';
-    h += '<div class="card" style="overflow:hidden"><div class="scroll"><div style="min-width:1080px"><div class="thead glist" style="border-bottom:0;padding-bottom:0"><span style="grid-column:1/6"></span><span class="gl" style="grid-column:6/8">Registered</span><span class="gl" style="grid-column:8/10">Attended</span></div><div class="thead glist" style="padding-top:6px"><span>Title</span><span>Dates</span><span>City</span><span>Country</span><span style="text-align:right">Meetings</span><span style="justify-self:end">' + tip('f2f', 'Registered face to face') + '</span><span style="justify-self:end">' + tip('on', 'Registered online') + '</span><span style="justify-self:end">' + tip('f2f', 'Attended face to face') + '</span><span style="justify-self:end">' + tip('on', 'Attended online') + '</span><span>Status</span><span></span></div>';
+      '</div>' + (S.site !== 'ETSI' ? '' : '<div><label for="kd" class="sr">Type</label><select id="kd" class="inp" data-model="kind" data-rerender="1" style="min-width:190px">' + ['All', 'Meeting group', 'Event group', 'Standalone meeting'].map(function (k) { return '<option value="' + k + '"' + (S.kind === k ? ' selected' : '') + '>' + (k === 'All' ? 'All types' : k) + '</option>'; }).join('') + '</select></div>') + '<div style="flex:1 1 240px"><label for="q" class="sr">Search</label><input id="q" class="inp" type="search" placeholder="Search group, meeting or location" value="' + esc(S.query) + '" data-model="query" data-rerender="1"></div></div>';
+    h += '<div class="card" style="overflow:hidden"><div class="scroll"><div style="min-width:' + (S.site === 'ETSI' ? 1200 : 1080) + 'px"><div class="thead glist' + (S.site === 'ETSI' ? ' ge' : '') + '" style="border-bottom:0;padding-bottom:0"><span style="grid-column:1/6"></span><span class="gl" style="grid-column:6/8">Registered</span><span class="gl" style="grid-column:8/10">Attended</span></div><div class="thead glist' + (S.site === 'ETSI' ? ' ge' : '') + '" style="padding-top:6px"><span>Title</span><span>Dates</span><span>City</span><span>Country</span><span style="text-align:right">Meetings</span><span style="justify-self:end">' + tip('f2f', 'Registered face to face') + '</span><span style="justify-self:end">' + tip('on', 'Registered online') + '</span><span style="justify-self:end">' + tip('f2f', 'Attended face to face') + '</span><span style="justify-self:end">' + tip('on', 'Attended online') + '</span><span>Status</span><span></span></div>';
     gs.forEach(function (g) {
-      h += '<button class="row glist" data-act="open" data-arg="' + g.id + '">' +
-        '<span style="display:flex;flex-direction:column;gap:3px;min-width:0"><span class="ell" style="font-size:15px;font-weight:600">' + esc(g.title) + '</span><span class="muted" style="font-size:13px">' + g.kind + '</span></span>' +
+      var ge = S.site === 'ETSI', gk = g.kind === 'Standalone meeting' ? 'meeting' : g.kind === 'Event group' ? 'event group' : 'meeting group';
+      h += '<' + (ge ? 'div role="button" tabindex="0"' : 'button') + ' class="row glist' + (ge ? ' ge' : '') + '" data-act="open" data-arg="' + g.id + '">' +
+        '<span style="display:flex;flex-direction:column;gap:3px;min-width:0"><span class="ell" style="font-size:15px;font-weight:600">' + esc(g.title) + '</span>' + (S.site === 'ETSI' ? '<span style="font-size:12px;font-weight:600;color:' + (g.kind === 'Event group' ? '#8A4510' : g.kind === 'Standalone meeting' ? '#5B3D8F' : 'var(--pd)') + '">' + g.kind + '</span>' : '') + '</span>' +
         '<span>' + range(g.start, g.end) + '</span>' + cityCell(g.location) + ctryCell(g.location) + '<span style="text-align:right;font-weight:600">' + g.meetings.length + '</span>' +
         '<span style="text-align:right;font-weight:600;color:#1F4F8F">' + fmt(sum(g.meetings, 'f2f')) + '</span><span style="text-align:right;font-weight:600;color:#8A4510">' + fmt(sum(g.meetings, 'online')) + '</span>' +
         '<span style="text-align:right;font-weight:600;color:#1F4F8F">' + (g.status === 'upcoming' ? '<span class="muted" style="font-weight:400">–</span>' : fmt(sum(g.meetings, 'attF2f'))) + '</span><span style="text-align:right;font-weight:600;color:#8A4510">' + (g.status === 'upcoming' ? '<span class="muted" style="font-weight:400">–</span>' : fmt(sum(g.meetings, 'attOnline'))) + '</span>' +
-        '<span class="pill" style="' + ST[g.status][1] + '">' + (g.status === 'ended' ? I.lock : '') + ST[g.status][0] + '</span>' + I.chev + '</button>';
+        '<span class="pill" style="' + ST[g.status][1] + '">' + (g.status === 'ended' ? I.lock : '') + ST[g.status][0] + '</span>' + (ge ? '<span style="display:flex;justify-content:flex-end;gap:2px">' + ib(ICX.c, 'Contribute to ' + esc(g.title), 'noop', 'Contribution') + ib(ICX.reg, g.status === 'ended' ? 'Registration closed (event ended)' : 'Register to ' + esc(g.title), 'regMeeting', g.id, g.status === 'ended') +
+        '<div data-menu style="position:relative">' + ib(ICX.more, 'More actions for ' + esc(g.title), 'rowMenu', g.id) + (S.rowMenu === g.id ? '<div class="pm" role="menu" style="position:fixed;min-width:210px;top:' + S.rowPos.top + 'px;right:' + S.rowPos.right + 'px">' + (S.role === 'creator' ? [['Manage ' + gk, 'open', g.id], ['Documents', 'noop', 'Documents'], ['Export participants', 'exportGrp', g.id]] : [['Documents', 'noop', 'Documents'], ['Contribute', 'noop', 'Contribution']]).map(function (i) { return '<button role="menuitem" data-act="' + i[1] + '" data-arg="' + esc(i[2]) + '">' + i[0] + '</button>'; }).join('') + '</div>' : '') + '</div></span>' : I.chev) + '</' + (ge ? 'div' : 'button') + '>';
     });
     if (!gs.length) h += '<div class="muted" style="padding:40px 20px;text-align:center">No group matches these filters.</div>';
-    h += '</div></div></div><p class="muted" style="margin:0;font-size:13px">' + S.pool.length + ' standalone meetings are not linked to any group. Link them from a group page.</p>';
+    h += '</div></div></div>';
+    if (S.site === 'ETSI' && total > eper) {
+      var efrom = (S.ePage - 1) * eper + 1, eto = Math.min(total, S.ePage * eper), nums = [];
+      for (var i = 1; i <= epages; i++) { if (i === 1 || i === epages || Math.abs(i - S.ePage) <= 1) nums.push(i); else if (nums[nums.length - 1] !== '…') nums.push('…'); }
+      h += '<nav aria-label="Pagination" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px"><span class="muted" style="font-size:13px">Showing ' + efrom + '-' + eto + ' of ' + total + '</span><div style="display:flex;align-items:center;gap:4px">' +
+        '<button class="btn btn-sm" data-act="epage" data-arg="' + (S.ePage - 1) + '"' + (S.ePage <= 1 ? ' disabled' : '') + '>Previous</button>' +
+        nums.map(function (n) { return n === '…' ? '<span class="muted" style="padding:0 6px">…</span>' : '<button class="btn btn-sm' + (n === S.ePage ? ' btn-p' : '') + '" data-act="epage" data-arg="' + n + '"' + (n === S.ePage ? ' aria-current="page"' : '') + ' style="min-width:36px">' + n + '</button>'; }).join('') +
+        '<button class="btn btn-sm" data-act="epage" data-arg="' + (S.ePage + 1) + '"' + (S.ePage >= epages ? ' disabled' : '') + '>Next</button></div></nav>';
+    }
+    h += '<p class="muted" style="margin:0;font-size:13px">' + S.pool.length + ' standalone meetings are not linked to any group. Link them from a group page.</p>';
     exportInfo = { n: gs.length, m: all.length };
     return h;
   }
   var exportInfo = { n: 0, m: 0 };
+  function fillMF(g, src) {
+    S.nmTitle = src ? src.ref + ' (copy)' : ''; S.nmBody = src ? src.body : '';
+    S.nmStart = src ? src.start : (g ? g.start : ''); S.nmEnd = src ? src.end : (g ? g.end : '');
+    S.nmLoc = src ? src.location : (g ? g.location : ''); S.nmContact = g ? (g.contact || '') : '';
+  }
+  function openMF(g, src) {
+    S.nmGid = g ? g.id : null; S.nmCat = 'Bodies'; S.nmRegStart = g ? g.regStart || 'As soon as published' : 'As soon as published'; S.nmRegClose = ''; S.nmInfo = '';
+    fillMF(g, src); S.view = 'mform'; S.addOpen = false;
+  }
+  function openReg(gid, only) {
+    var g = S.groups.find(function (x) { return x.id === gid; }), td = todayStr();
+    S.regGid = gid; S.regStep = 1; S.regMode = {}; S.regSel = {};
+    g.meetings.forEach(function (m) { S.regSel[m.id] = m.end >= td; });
+    S.view = 'register';
+  }
 
   function viewDetail() {
-    var g = sel(), locked = g.status === 'ended', isEtsi = g.family === 'ISET', k4eOn = S.k4eStatus === 'ok';
+    var g = sel(), locked = g.status === 'ended', isEtsi = g.family === 'ETSI', k4eOn = S.k4eStatus === 'ok';
     var maxT = Math.max.apply(null, [1].concat(g.meetings.map(function (m) { return m.f2f + m.online; })));
-    var h = '<nav aria-label="Breadcrumb" class="muted" style="font-size:13px;display:flex;gap:8px"><a href="#" data-act="go" data-arg="list">Events</a><span aria-hidden="true">/</span><span style="color:#1B2414;font-weight:600">' + esc(g.title) + '</span></nav>';
+    var h = '<nav aria-label="Breadcrumb" class="muted" style="font-size:13px;display:flex;gap:8px"><a href="#" data-act="go" data-arg="list">' + (S.site === 'ETSI' ? '&larr; Back to list' : 'Events') + '</a><span aria-hidden="true">/</span><span style="color:#1B2414;font-weight:600">' + esc(g.title) + '</span></nav>';
     h += '<div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:16px"><div style="display:flex;flex-direction:column;gap:8px;min-width:0"><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">' +
       '<span class="tag" style="' + FAM[g.family] + '">' + g.family + '</span><span class="tag" style="background:#F1F3EE;color:#3A4334;font-weight:600">' + g.kind + '</span><span class="pill" style="' + ST[g.status][1] + '">' + ST[g.status][0] + '</span></div>' +
       '<h1>' + esc(g.title) + '</h1><p class="muted" style="margin:0">' + range(g.start, g.end) + ' · ' + esc(g.location) + '</p></div>' +
@@ -277,22 +341,22 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
 
     h += '<div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start"><div style="flex:999 1 640px;min-width:0"><section class="card" style="overflow:hidden">' +
       '<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid #EEF1EA"><h2>Meetings</h2>' +
-      (locked ? '' : '<button class="btn btn-p" data-act="toggleAdd" aria-expanded="' + S.addOpen + '">' + I.plus + 'Add meeting</button>') + '</div>';
+      (locked || g.kind === 'Standalone meeting' ? '' : '<button class="btn btn-p" data-act="toggleAdd" aria-expanded="' + S.addOpen + '">' + I.plus + 'Add meeting</button>') + '</div>';
     if (S.addOpen && !locked) {
       var aq = (S.addQuery || '').trim().toLowerCase();
       var pool = S.pool.filter(function (p) { return p.family === g.family && (!aq || (p.ref + ' ' + p.body + ' ' + p.location).toLowerCase().indexOf(aq) >= 0); });
-      h += '<div style="background:var(--hv);border-bottom:1px solid #DDE3D6;padding:18px 20px;display:flex;flex-direction:column;gap:14px"><div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="createInGroup">Create a new meeting in this group</button></div>' +
+      h += '<div style="background:var(--hv);border-bottom:1px solid #DDE3D6;padding:18px 20px;display:flex;flex-direction:column;gap:14px"><div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="createInGroup">Create a new meeting in this group</button>' + (isEtsi && g.meetings.length ? '<button class="btn" data-act="cloneFirst">Clone the first meeting</button>' : '') + '</div>' +
         '<div style="font-size:13px;font-weight:600;color:#3A4334">Or link an existing standalone meeting (' + g.family + ')</div>' +
         '<div><label for="addq" class="sr">Search standalone meetings</label><input id="addq" class="inp" type="search" placeholder="Search by meeting, body or location" value="' + esc(S.addQuery || '') + '" data-model="addQuery" data-rerender="1"></div><div style="display:flex;flex-direction:column;gap:8px">';
       pool.forEach(function (p) {
         var warn = p.start < g.start || p.end > g.end;
         h += '<div class="card" style="border-radius:8px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:10px 12px"><span style="flex:1 1 200px;display:flex;flex-direction:column;gap:2px"><span style="font-weight:600">' + p.ref + '</span><span class="muted" style="font-size:12px">' + p.body + ' · ' + range(p.start, p.end) + ' · ' + p.location + '</span></span>' +
-          (warn ? '<span style="font-size:12px;color:#8A4510;background:#FCF1E6;padding:3px 8px;border-radius:6px">Dates outside the group</span>' : '') + '<button class="btn" data-act="link" data-arg="' + p.id + '">Link</button></div>';
+          (warn ? '<span style="font-size:12px;color:#8A4510;background:#FCF1E6;padding:3px 8px;border-radius:6px">' + (isEtsi ? 'Dates outside the group, cannot be linked' : 'Dates outside the group') + '</span>' : '') + '<button class="btn" data-act="link" data-arg="' + p.id + '"' + dis(warn && isEtsi) + '>Link</button></div>';
       });
       if (!pool.length) h += '<span class="muted" style="font-size:13px">' + (aq ? 'No standalone meeting matches your search.' : 'No standalone ' + g.family + ' meeting available.') + '</span>';
       h += '</div>' + (isEtsi
         ? '<label style="display:flex;align-items:center;gap:8px;font-weight:500"><input type="checkbox" data-act="toggleNotify"' + (S.notify ? ' checked' : '') + ' style="width:18px;height:18px;accent-color:var(--p)"> Notify registered participants when a meeting is added</label>'
-        : '<span class="muted" style="font-size:13px">P3GP: no group-level notification is sent. Participants keep registering per meeting.</span>') + '</div>';
+        : '<span class="muted" style="font-size:13px">3GPP: no group-level notification is sent. Participants keep registering per meeting.</span>') + '</div>';
     }
     h += '<div class="scroll"><div style="min-width:640px"><div class="thead mlist" style="border-bottom:0;padding-bottom:0"><span style="grid-column:1/3"></span><span class="gl" style="grid-column:3/5">Registered</span><span class="gl" style="grid-column:5/7">Attended</span></div><div class="thead mlist" style="padding-top:6px;border-bottom:0"><span>Meeting</span><span>Dates</span><span style="justify-self:end">' + tip('f2f', 'Registered face to face') + '</span><span style="justify-self:end">' + tip('on', 'Registered online') + '</span><span style="justify-self:end">' + tip('f2f', 'Attended face to face') + '</span><span style="justify-self:end">' + tip('on', 'Attended online') + '</span><span></span></div>';
     g.meetings.forEach(function (m) {
@@ -305,11 +369,12 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     if (!g.meetings.length) h += '<div class="muted" style="padding:32px 20px;text-align:center;border-top:1px solid #EEF1EA">No meeting in this group yet. Use Add meeting to create or link one.</div>';
     h += '</div></div></section></div>';
 
-    h += '<aside style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:24px"><section class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:12px"><h2>Event details</h2><dl class="kv">' +
+    h += '<aside style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:24px"><section class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:12px"><h2>' + (S.site === 'ETSI' ? (g.kind === 'Event group' ? 'Event group details' : g.kind === 'Meeting group' ? 'Meeting group details' : 'Meeting details') : 'Event details') + '</h2><dl class="kv">' +
       '<dt>Body family</dt><dd>' + g.family + '</dd>' +
       '<dt>IT support</dt><dd>' + (g.itSupport ? esc(g.itSupport) : '<span class="muted">Not set</span>') + '</dd>' +
       '<dt>Satisfaction survey URL</dt><dd style="word-break:break-all">' + (g.survey ? '<a href="' + esc(g.survey) + '" target="_blank" rel="noopener">' + esc(g.survey) + '</a>' : '<span class="muted">Not set</span>') + '</dd>' +
       '<dt>Additional event information</dt><dd style="line-height:1.5">' + (g.info ? esc(g.info) : '<span class="muted">Not set</span>') + '</dd></dl></section>';
+    if (S.site !== 'ETSI') {
     h += '<section class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:12px"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><h2>Integration</h2>' + (g.k4e.linked ? '<span class="pill" style="background:#E6F2DA;color:#2F6610">Connected</span>' : '') + '</div>';
     if (g.k4e.linked) {
       h += '<dl class="kv"><dt>Provider</dt><dd style="font-weight:600">' + esc(g.k4e.provider || 'Key4Events') + '</dd><dt>API key</dt><dd style="font-family:ui-monospace,monospace">' + esc(g.k4e.keyMask || '••••') + '</dd><dt>Last sync</dt><dd>' + esc(g.k4e.sync) + '</dd><dt>Data shared</dt><dd>Meeting list, F2F participants</dd></dl>' +
@@ -321,7 +386,9 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
         '<p class="muted" style="margin:0;font-size:13px">Sharing participant data with a host requires the GDPR agreement for this event.</p>' +
         '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn btn-p" data-act="connectK4e"' + dis(locked || !S.k4eKey.trim()) + '>Test and connect</button><button class="btn ttip" data-act="syncK4e" data-tip="Connect an API key first" disabled aria-label="Sync (connect an API key first)">Sync</button></div>';
     }
-    h += '</section></aside></div>';
+    h += '</section>';
+    }
+    h += '</aside></div>';
     return h;
   }
 
@@ -332,7 +399,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     var today = iso(d), plus = function (n) { var x = new Date(d); x.setDate(x.getDate() + n); return iso(x); };
     var LIM = { '1m': 30, '6m': 183, '1y': 365 };
     var all = [];
-    S.groups.forEach(function (g) { if (g.family === S.site) g.meetings.forEach(function (m) { all.push(Object.assign({}, m, { gid: g.id, gtitle: g.title })); }); });
+    S.groups.forEach(function (g) { if (g.family === S.site) g.meetings.forEach(function (m) { all.push(Object.assign({}, m, g.kind === 'Standalone meeting' ? { gid: null, gtitle: '' } : { gid: g.id, gtitle: g.title })); }); });
     S.pool.forEach(function (m) { if (m.family === S.site) all.push(Object.assign({}, m, { gid: null, gtitle: '' })); });
     var bodies = ['All'], locs = ['All'];
     all.forEach(function (m) { if (bodies.indexOf(m.body) < 0) bodies.push(m.body); if (locs.indexOf(m.location) < 0) locs.push(m.location); });
@@ -350,6 +417,9 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
       var x = S.mSort === 'name' ? a.ref : S.mSort === 'location' ? a.location : a.start, y = S.mSort === 'name' ? b.ref : S.mSort === 'location' ? b.location : b.start;
       return (x < y ? -1 : x > y ? 1 : a.ref < b.ref ? -1 : 1) * dir;
     });
+    var per = Number(S.mPer) || 10, pages = Math.max(1, Math.ceil(list.length / per));
+    if (S.mPage > pages) S.mPage = pages; if (S.mPage < 1) S.mPage = 1;
+    var pageList = list.slice((S.mPage - 1) * per, S.mPage * per);
     var opt = function (arr, cur) { return arr.map(function (o) { return '<option' + (o === cur ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join(''); };
     var sel2 = function (id, lbl, inner, k) { return '<div class="field" style="min-width:120px"><label for="' + id + '">' + lbl + '</label><select id="' + id + '" class="inp" data-model="' + k + '" data-rerender="1">' + inner + '</select></div>'; };
     var ic = function (path) { return '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + path + '</svg>'; };
@@ -358,6 +428,9 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
       doc: ic('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'),
       dup: ic('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>'),
       xl: ic('<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>'),
+      c: '<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1B1B1B"/><path d="M15.2 9.2a4 4 0 1 0 0 5.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>',
+      regB: '<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="#1B1B1B"><path d="M13 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6v-2.4h6V5.4h-6z"/><path d="M3 10.2h6.2V6.5L15 12l-5.8 5.5v-3.7H3z"/></svg>',
+      moreB: '<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="#1B1B1B"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>',
       more: ic('<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>'),
       cal: ic('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'),
       pin: ic('<path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>'),
@@ -366,9 +439,29 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     };
     var act = function (svg, label, a, arg) { return '<button class="ibtn" data-act="' + a + '" data-arg="' + esc(arg) + '" aria-label="' + label + '" title="' + label + '">' + svg + '</button>'; };
 
-    var h = '<div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px"><div style="display:flex;flex-direction:column;gap:4px"><h1>Meetings</h1><p class="muted" style="margin:0">' + list.length + ' ' + S.site + ' meeting' + (list.length === 1 ? '' : 's') + ' in this view</p></div>' +
-      '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="noop" data-arg="Upload TDoc">Upload TDoc</button><button class="btn" data-act="exportMtg">' + I.dl + 'Export list</button><button class="btn" data-act="noop" data-arg="Webinar participants list">Webinar participants list</button><button class="btn btn-p" data-act="newMeeting">' + I.plus + 'New meeting</button></div></div>';
+    var h = '<div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px"><div style="display:flex;flex-direction:column;gap:4px"><h1>Meetings</h1><div class="muted" style="margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:14px"><span><strong style="color:#1B2414">' + list.length + '</strong> meeting' + (list.length === 1 ? '' : 's') + '</span><span aria-hidden="true">·</span><span>' + pages + ' page' + (pages === 1 ? '' : 's') + '</span><span aria-hidden="true">·</span><label for="mpp" style="display:flex;align-items:center;gap:6px">Show <select id="mpp" class="inp" data-model="mPer" data-rerender="1" style="min-height:32px;padding:0 8px;width:auto">' + [5, 10, 25, 50].map(function (n) { return '<option value="' + n + '"' + (per === n ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select> per page</label></div></div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px">' + (S.site === 'ETSI' ? (S.role === 'creator' ? newMenu('New meeting', false) : '') + '<button class="btn btn-p" data-act="exportMtg">Export list</button><button class="btn btn-p" data-act="noop" data-arg="Webinar participants list">Webinar participants list</button>' : '<button class="btn" data-act="exportMtg">' + I.dl + 'Export list</button><button class="btn btn-p" data-act="newMeeting">' + I.plus + 'New meeting</button>') + '</div></div>';
 
+    if (S.site === 'ETSI') {
+      var mine = [];
+      S.groups.forEach(function (g) { if (g.family === 'ETSI') g.meetings.forEach(function (x) { if (S.myReg[x.id] && x.end >= today) mine.push(Object.assign({}, x, { gtitle: g.kind === 'Standalone meeting' ? '' : g.title })); }); });
+      S.pool.forEach(function (x) { if (x.family === 'ETSI' && S.myReg[x.id] && x.end >= today) mine.push(Object.assign({}, x, { gtitle: '' })); });
+      mine.sort(function (a, b) { return a.start < b.start ? -1 : a.start > b.start ? 1 : 0; });
+      var shown = S.myAll ? mine : mine.slice(0, 1);
+      if (mine.length) {
+        h += '<section aria-label="My registrations" style="display:flex;flex-direction:column;gap:10px"><h2 style="font-size:18px;font-weight:600">Top ' + shown.length + ' upcoming meeting' + (shown.length === 1 ? '' : 's') + ' for which I am registered' + (mine.length > 1 ? ' (<a href="#" data-act="myAll">' + (S.myAll ? 'Show less' : 'Show all') + '</a>)' : '') + '</h2>';
+        shown.forEach(function (x) {
+          var on = x.start <= today, mk = 'my:' + x.id;
+          h += '<div class="card" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;padding:12px 18px;background:var(--ps);border-color:transparent"><span style="flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:2px"><span class="ell" style="font-size:15px;font-weight:700">' + esc(x.ref) + '</span><span class="muted ell" style="font-size:13px">' + esc(x.body) + (x.gtitle ? ' · ' + esc(x.gtitle) : ' · Standalone') + '</span></span>' +
+            '<span style="flex:0 1 190px;display:flex;flex-direction:column;gap:4px"><span style="font-size:14px">' + range(x.start, x.end) + '</span><span class="pill" style="align-self:flex-start;font-size:11px;padding:2px 8px;' + (on ? 'background:#FCF1E6;color:#8A4510' : 'background:#E3ECF8;color:#1D4E89') + '">' + (on ? 'Ongoing' : 'Upcoming') + '</span></span>' +
+            '<span style="flex:0 1 190px" class="muted">' + esc(x.location) + '</span>' +
+            '<span style="flex:0 1 170px"><span class="pill" style="background:#fff;color:var(--pd);border:1px solid var(--p)">Registered · ' + esc(S.myReg[x.id]) + '</span></span>' +
+            '<span style="display:flex;justify-content:flex-end;gap:2px;margin-left:auto">' + ib(ICX.c, 'Contribute to ' + esc(x.ref), 'noop', 'Contribution') + ib(ICX.reg, 'Update my registration to ' + esc(x.ref), 'regMeeting', x.id) +
+            '<div data-menu style="position:relative">' + ib(ICX.more, 'More actions for ' + esc(x.ref), 'rowMenu', mk) + (S.rowMenu === mk ? '<div class="pm" role="menu" style="position:fixed;min-width:210px;top:' + S.rowPos.top + 'px;right:' + S.rowPos.right + 'px">' + [['Documents', 'noop', 'Documents'], ['Contribute', 'noop', 'Contribution'], ['Cancel my registration', 'noop', 'Cancel registration']].map(function (i) { return '<button role="menuitem" data-act="' + i[1] + '" data-arg="' + esc(i[2]) + '">' + i[0] + '</button>'; }).join('') + '</div>' : '') + '</div></span></div>';
+        });
+        h += '</section>';
+      }
+    }
     h += '<div class="card" style="padding:16px 18px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 18px">' +
       sel2('mg', 'Groups', opt(bodies, S.mGroup), 'mGroup') +
       '<div class="field"><span style="font-size:13px;font-weight:600;color:#3A4334">Display period</span><div class="segs" role="group" aria-label="Display period">' +
@@ -383,38 +476,148 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
       '<div class="mt muted" style="padding:0 16px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.4px"><span></span><span>Meeting</span><span>Dates</span><span>City</span><span>Country</span>' +
       '<span style="display:flex;flex-direction:column;gap:2px">Registered<span style="display:flex;gap:2px">' + tip('f2f', 'Registered face to face') + tip('on', 'Registered online') + '</span></span>' +
       '<span style="display:flex;flex-direction:column;gap:2px">Attended<span style="display:flex;gap:2px">' + tip('f2f', 'Attended face to face') + tip('on', 'Attended online') + '</span></span>' +
-      '<span>TDocs</span><span>Event group</span><span style="text-align:right">Actions</span></div>';
-    list.forEach(function (m) {
+      '<span>TDocs</span><span>Event</span><span style="text-align:right">Actions</span></div>';
+    pageList.forEach(function (m) {
       var open = !!S.mOpen[m.id], ended = m.end < today, ongoing = !ended && m.start <= today;
       var st = ended ? ['Ended', 'background:#ECEEEA;color:#4A5245'] : ongoing ? ['Ongoing', 'background:#FCF1E6;color:#8A4510'] : ['Upcoming', 'background:#E3ECF8;color:#1D4E89'];
       h += '<div class="mcard' + (open ? ' open' : '') + '"><div class="mt mhead"><button class="ibtn" data-act="mtoggle" data-arg="' + m.id + '" aria-expanded="' + open + '" aria-label="' + (open ? 'Collapse' : 'Expand') + ' ' + m.ref + '"><span class="chev" style="display:inline-flex"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>' +
-        '<span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span class="ell" style="font-size:15px;font-weight:700">' + esc(m.ref) + '</span><span class="muted ell" style="font-size:13px">' + esc(m.body) + '</span></span>' +
+        '<span style="display:flex;flex-direction:column;gap:2px;min-width:0">' + (S.site === 'ETSI' && !m.gid && S.role === 'creator' ? '<a href="#" class="ell" data-act="openMtg" data-arg="' + m.id + '" style="font-size:15px;font-weight:700;text-decoration:none;color:var(--pd)">' + esc(m.ref) + '</a>' : '<span class="ell" style="font-size:15px;font-weight:700">' + esc(m.ref) + '</span>') + '<span class="muted ell" style="font-size:13px">' + esc(m.body) + '</span></span>' +
         '<span style="display:flex;flex-direction:column;gap:4px"><span style="font-size:14px">' + range(m.start, m.end) + '</span><span class="pill" style="align-self:flex-start;font-size:11px;padding:2px 8px;' + st[1] + '">' + st[0] + '</span></span>' +
         cityCell(m.location) + ctryCell(m.location) +
         '<span style="display:flex;flex-direction:column;gap:4px">' + nv('f2f', 'Registered face to face', m.f2f) + nv('on', 'Registered online', m.online) + '</span>' +
         '<span style="display:flex;flex-direction:column;gap:4px">' + nv('f2f', 'Attended face to face', m.attF2f, m.start <= today) + nv('on', 'Attended online', m.attOnline, m.start <= today) + '</span>' +
         '<span class="chip" style="justify-self:start">0</span>' +
         '<span>' + (m.gid ? '<button class="chip" data-act="open" data-arg="' + m.gid + '" title="Open this event group" style="max-width:100%"><span class="ell">' + esc(m.gtitle) + '</span></button>' : '<span class="muted" style="font-size:13px">Standalone</span>') + '</span>' +
-        '<span style="display:flex;justify-content:flex-end;gap:2px">' + act(IC.reg, 'Register to ' + m.ref, 'noop', 'Registration') + act(IC.doc, 'Documents of ' + m.ref, 'noop', 'Documents') + act(IC.dup, 'Duplicate ' + m.ref, 'noop', 'Duplicate') + act(IC.xl, 'Export participants of ' + m.ref, 'exportOne', m.id) + act(IC.more, 'More actions for ' + m.ref, 'noop', 'More actions') + '</span></div>';
+        '<span style="display:flex;justify-content:flex-end;gap:2px">' + (S.site === 'ETSI' ? act(IC.c, 'Contribute to ' + m.ref, 'noop', 'Contribution') + act(IC.regB, 'Register to ' + m.ref, 'regMeeting', m.id) + '<div data-menu style="position:relative">' + act(IC.moreB, 'More actions for ' + m.ref, 'rowMenu', m.id) + (S.rowMenu === m.id ? '<div class="pm" role="menu" style="position:fixed;min-width:210px;top:' + S.rowPos.top + 'px;right:' + S.rowPos.right + 'px">' + (S.role === 'participant' ? [['Documents', 'noop', 'Documents'], ['Contribute', 'noop', 'Contribution']] : [['Documents', 'noop', 'Documents'], ['Edit meeting', 'noop', 'Edit meeting'], ['Export participants', 'exportOne', m.id], ['Cancel meeting', 'noop', 'Cancel meeting']]).map(function (i) { return '<button role="menuitem" data-act="' + i[1] + '" data-arg="' + esc(i[2]) + '">' + i[0] + '</button>'; }).join('') + '</div>' : '') + '</div>' : act(IC.reg, 'Register to ' + m.ref, 'noop', 'Registration') + act(IC.doc, 'Documents of ' + m.ref, 'noop', 'Documents') + act(IC.dup, 'Duplicate ' + m.ref, 'noop', 'Duplicate') + act(IC.xl, 'Export participants of ' + m.ref, 'exportOne', m.id) + act(IC.more, 'More actions for ' + m.ref, 'noop', 'More actions')) + '</span></div>';
       if (open) {
         var tot = m.f2f + m.online || 1;
         h += '<div style="border-top:1px solid #EEF1EA;background:var(--hv);padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">' +
           '<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600;color:#5B6655;text-transform:uppercase;letter-spacing:.4px">Details</span><dl class="kv"><dt>Presence</dt><dd>' + (m.f2f && m.online ? 'Face to face and online' : m.f2f ? 'Face to face' : 'Online') + '</dd><dt>Dates</dt><dd>' + range(m.start, m.end) + '</dd><dt>Location</dt><dd>' + esc(m.location) + '</dd></dl></div>' +
           '<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600;color:#5B6655;text-transform:uppercase;letter-spacing:.4px">Registration split</span><span class="bar"><span style="width:' + (m.f2f / tot * 100).toFixed(1) + '%;background:#2563B0"></span><span style="width:' + (m.online / tot * 100).toFixed(1) + '%;background:#D9822B"></span></span><span style="font-size:13px"><strong style="color:#1F4F8F">' + fmt(m.f2f) + '</strong> face to face · <strong style="color:#8A4510">' + fmt(m.online) + '</strong> online · ' + fmt(m.f2f + m.online) + ' total</span></div>' +
           '<div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="font-size:12px;font-weight:600;color:#5B6655;text-transform:uppercase;letter-spacing:.4px">Event group</span>' +
-          (m.gid ? '<span style="font-size:14px;font-weight:600">' + esc(m.gtitle) + '</span><button class="btn btn-sm" data-act="open" data-arg="' + m.gid + '">Manage this event group</button>' : '<span class="muted" style="font-size:13px">Not linked to any group.</span><button class="btn btn-sm" data-act="noop" data-arg="Link to a group">Link to an event group</button>') + '</div></div>';
+          (m.gid ? '<span style="font-size:14px;font-weight:600">' + esc(m.gtitle) + '</span>' + (S.site === 'ETSI' && S.role === 'participant' ? '<button class="btn btn-sm" data-act="regMeeting" data-arg="' + m.gid + '">Register to this event group</button>' : '<button class="btn btn-sm" data-act="open" data-arg="' + m.gid + '">Manage this event group</button>') + '' : '<span class="muted" style="font-size:13px">Not linked to any group.</span>' + (S.site === 'ETSI' && S.role === 'participant' ? '' : '<button class="btn btn-sm" data-act="noop" data-arg="Link to a group">Link to an event group</button>')) + '</div></div>';
       }
       h += '</div>';
     });
     if (!list.length) h += '<div class="card" style="padding:40px 20px;text-align:center"><p style="margin:0 0 12px">No meeting matches these filters.</p><button class="btn" data-act="mperiod" data-arg="ended">See all past meetings</button></div>';
     h += '</div></div>';
+    if (list.length > per) {
+      var from = (S.mPage - 1) * per + 1, to = Math.min(list.length, S.mPage * per), nums = [];
+      for (var i = 1; i <= pages; i++) { if (i === 1 || i === pages || Math.abs(i - S.mPage) <= 1) nums.push(i); else if (nums[nums.length - 1] !== '…') nums.push('…'); }
+      h += '<nav aria-label="Pagination" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px"><span class="muted" style="font-size:13px">Showing ' + from + '-' + to + ' of ' + list.length + '</span><div style="display:flex;align-items:center;gap:4px">' +
+        '<button class="btn btn-sm" data-act="mpage" data-arg="' + (S.mPage - 1) + '"' + (S.mPage <= 1 ? ' disabled' : '') + '>Previous</button>' +
+        nums.map(function (n) { return n === '…' ? '<span class="muted" style="padding:0 6px">…</span>' : '<button class="btn btn-sm' + (n === S.mPage ? ' btn-p' : '') + '" data-act="mpage" data-arg="' + n + '"' + (n === S.mPage ? ' aria-current="page"' : '') + ' style="min-width:36px">' + n + '</button>'; }).join('') +
+        '<button class="btn btn-sm" data-act="mpage" data-arg="' + (S.mPage + 1) + '"' + (S.mPage >= pages ? ' disabled' : '') + '>Next</button></div></nav>';
+    }
     mtgInfo = list;
     return h;
   }
   var mtgInfo = [];
 
+  function todayStr() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function newMenu(lbl, plus) {
+    var items = [['newStandalone', 'Standalone meeting', 'Uses the current creation process'], ['newMGroup', 'Meeting group', 'Meetings related to bodies'], ['newEGroup', 'Event group', 'Events related to an activity']];
+    return '<div data-menu style="position:relative"><button class="btn btn-p" data-act="toggleMenu" aria-haspopup="menu" aria-expanded="' + S.menuOpen + '">' + (plus ? I.plus : '') + lbl + '<svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left:6px"><path d="M6 9l6 6 6-6z"/></svg></button>' +
+      (S.menuOpen ? '<div class="pm" role="menu">' + items.map(function (i) { return '<button role="menuitem" data-act="' + i[0] + '">' + i[1] + '<span>' + i[2] + '</span></button>'; }).join('') + '</div>' : '') + '</div>';
+  }
+
+  function findMtg(id) {
+    var m = S.pool.find(function (x) { return x.id === id; });
+    if (m) return { m: m, cont: null };
+    var cont = S.groups.find(function (x) { return x.kind === 'Standalone meeting' && x.meetings.some(function (y) { return y.id === id; }); });
+    if (cont) return { m: cont.meetings.find(function (y) { return y.id === id; }), cont: cont };
+    return null;
+  }
+
+  function viewMeetingPage() {
+    var f = findMtg(S.mtgId);
+    if (!f) return '<p>Meeting not found.</p>';
+    var m = f.m, td = todayStr(), ended = m.end < td, ongoing = !ended && m.start <= td, started = m.start <= td;
+    var st = ended ? ['Ended', 'background:#ECEEEA;color:#4A5245'] : ongoing ? ['Ongoing', 'background:#FCF1E6;color:#8A4510'] : ['Upcoming', 'background:#E3ECF8;color:#1D4E89'];
+    var big = function (k, lab, v, on) { return '<span style="display:inline-flex;align-items:center;gap:8px;font-size:28px;font-weight:700;color:' + (k === 'f2f' ? CF : CO) + '">' + tip(k, lab) + (on === false ? '<span class="muted" style="font-weight:400">–</span>' : fmt(v)) + '</span>'; };
+    var tile = function (label, a, b, la, lb, on) { return '<div class="card kpi"><span class="l">' + label + '</span><div style="display:flex;flex-wrap:wrap;gap:4px 28px">' + big('f2f', la, a, on) + big('on', lb, b, on) + '</div></div>'; };
+    var groups = S.groups.filter(function (g) { return g.family === 'ETSI' && g.kind !== 'Standalone meeting' && g.status !== 'ended'; });
+    var tg = S.groups.find(function (x) { return x.id === S.linkGid; }), out = tg && (m.start < tg.start || m.end > tg.end);
+    var h = '<nav aria-label="Breadcrumb" class="muted" style="font-size:13px;display:flex;gap:8px"><a href="#" data-act="go" data-arg="list">&larr; Back to list</a><span aria-hidden="true">/</span><span style="color:#1B2414;font-weight:600">' + esc(m.ref) + '</span></nav>' +
+      '<div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:16px"><div style="display:flex;flex-direction:column;gap:8px;min-width:0"><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span class="tag" style="' + FAM.ETSI + '">ETSI</span><span class="tag" style="background:#F1F3EE;color:#3A4334;font-weight:600">Standalone meeting</span><span class="pill" style="' + st[1] + '">' + st[0] + '</span></div>' +
+      '<h1>' + esc(m.ref) + '</h1><p class="muted" style="margin:0">' + range(m.start, m.end) + ' · ' + esc(m.location) + '</p></div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="noop" data-arg="Edit meeting">Edit meeting</button><button class="btn" data-act="noop" data-arg="Export participants list">' + I.dl + 'Export participants list</button></div></div>' +
+      '<div class="kpis">' + tile('Registered', m.f2f, m.online, 'Registered face to face', 'Registered online') + tile('Attended', m.attF2f, m.attOnline, 'Attended face to face', 'Attended online', started) + '</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start"><section class="card" style="flex:1 1 360px;padding:18px 20px;display:flex;flex-direction:column;gap:12px"><h2>Meeting details</h2><dl class="kv">' +
+      '<dt>Body</dt><dd>' + esc(m.body) + '</dd><dt>Dates</dt><dd>' + range(m.start, m.end) + '</dd><dt>Location</dt><dd>' + esc(m.location) + '</dd><dt>Registration closure</dt><dd>' + (m.regClose ? range(m.regClose, m.regClose) : '<span class="muted">Not set</span>') + '</dd><dt>Contact</dt><dd>Meeting support (ETSI)</dd><dt>Additional information</dt><dd class="muted">Dummy meeting page for the prototype.</dd></dl></section>' +
+      '<section class="card" style="flex:1 1 360px;padding:18px 20px;display:flex;flex-direction:column;gap:12px"><h2>Link to a group</h2><p class="muted" style="margin:0;font-size:13px">Attach this meeting to an existing meeting group or event group. The meeting dates must fit the group dates.</p>' +
+      '<div class="field"><label for="lg">Group</label><select id="lg" class="inp" data-model="linkGid" data-rerender="1"><option value="">Select a group</option>' + groups.map(function (g) { return '<option value="' + g.id + '"' + (S.linkGid === g.id ? ' selected' : '') + '>' + esc(g.title) + ' (' + range(g.start, g.end) + ')</option>'; }).join('') + '</select></div>' +
+      (out ? '<div role="alert" style="background:#FCF1E6;color:#8A4510;border-radius:8px;padding:10px 14px;font-size:13px">Dates outside the group (' + range(tg.start, tg.end) + '), the meeting cannot be linked.</div>' : '') +
+      '<div><button class="btn btn-p" data-act="linkMtg"' + dis(!tg || out) + '>Link to this group</button></div></section></div>';
+    return h;
+  }
+
+  function viewMeetingForm() {
+    var g = S.nmGid ? S.groups.find(function (x) { return x.id === S.nmGid; }) : null;
+    var catLocked = g ? (g.kind === 'Event group' ? 'Events' : 'Bodies') : null;
+    var cat = catLocked || S.nmCat;
+    var bad = !S.nmTitle.trim() || !S.nmStart || !S.nmEnd || S.nmEnd < S.nmStart, msg = '';
+    if (S.nmStart && S.nmEnd && S.nmEnd < S.nmStart) msg = 'The end date is before the start date.';
+    else if (g && S.nmStart && S.nmEnd && (S.nmStart < g.start || S.nmEnd > g.end)) { msg = 'Dates must stay within the group (' + range(g.start, g.end) + '). Change the meeting dates, or edit the group dates first.'; bad = true; }
+    var h = g
+      ? '<nav aria-label="Breadcrumb" class="muted" style="font-size:13px;display:flex;flex-wrap:wrap;gap:8px"><a href="#" data-act="go" data-arg="list">' + (S.site === 'ETSI' ? '&larr; Back to list' : 'Events') + '</a><span aria-hidden="true">/</span><a href="#" data-act="open" data-arg="' + g.id + '">' + esc(g.title) + '</a><span aria-hidden="true">/</span><span style="color:#1B2414;font-weight:600">New meeting</span></nav>'
+      : '<nav aria-label="Breadcrumb" class="muted" style="font-size:13px;display:flex;gap:8px"><a href="#" data-act="go" data-arg="meetings">Meetings</a><span aria-hidden="true">/</span><span style="color:#1B2414;font-weight:600">New standalone meeting</span></nav>';
+    h += '<div style="display:flex;flex-direction:column;gap:6px">' + (g ? '<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span class="tag" style="' + FAM[g.family] + '">' + g.family + '</span><span class="tag" style="background:#F1F3EE;color:#3A4334;font-weight:600">' + g.kind + '</span></div><h1>' + esc(g.title) + '</h1><p class="muted" style="margin:0">New ' + (g.kind === 'Event group' ? 'event' : 'meeting') + ' in this group · ' + range(g.start, g.end) + ' · ' + esc(g.location) + '</p>' : '<h1>New standalone meeting</h1><p class="muted" style="margin:0">Uses the current creation process. You can link it to a group later.</p>') + '</div>';
+    function f(id, lbl, inner, full, note) { return '<div class="field' + (full ? ' full' : '') + '"><label for="' + id + '">' + lbl + '</label>' + inner + (note ? '<span class="muted" style="font-size:12px">' + note + '</span>' : '') + '</div>'; }
+    var inh = g ? 'Inherited from the group, editable' : '';
+    h += '<section class="card" style="padding:24px;display:flex;flex-direction:column;gap:20px"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px 20px">' +
+      f('nmt', 'Title *', '<input id="nmt" class="inp" placeholder="e.g. TC CYBER#48" value="' + esc(S.nmTitle) + '" data-model="nmTitle" data-rerender="1">', true) +
+      '<div class="field"><span style="font-size:13px;font-weight:600;color:#3A4334">Category</span><div class="segs" role="group" aria-label="Category">' +
+      ['Bodies', 'Events'].map(function (c) { var off = catLocked && catLocked !== c; return '<button class="seg' + (cat === c ? ' on' : '') + '" data-act="nmCat" data-arg="' + c + '"' + dis(off) + (off ? ' title="Not available in this ' + g.kind.toLowerCase() + '" style="opacity:.45"' : '') + '>' + c + '</button>'; }).join('') + '</div>' +
+      (catLocked ? '<span class="muted" style="font-size:12px">' + (catLocked === 'Bodies' ? 'Events' : 'Bodies') + ' is greyed out in a ' + g.kind.toLowerCase() + '</span>' : '') + '</div>' +
+      f('nmb', cat === 'Bodies' ? 'Body' : 'Event name', '<input id="nmb" class="inp" placeholder="' + (cat === 'Bodies' ? 'e.g. ETSI TC CYBER' : 'e.g. Security Conference') + '" value="' + esc(S.nmBody) + '" data-model="nmBody">', false, cat === 'Bodies' ? 'Several bodies can be selected for a joint meeting (not used in this prototype)' : '') +
+      f('nms', 'Start date *', '<input id="nms" class="inp" type="date" value="' + esc(S.nmStart) + '" data-model="nmStart" data-rerender="1">', false, inh) +
+      f('nme', 'End date *', '<input id="nme" class="inp" type="date" value="' + esc(S.nmEnd) + '" data-model="nmEnd" data-rerender="1">', false, inh) +
+      f('nmrs', 'Registration start', '<select id="nmrs" class="inp" data-model="nmRegStart"><option' + (S.nmRegStart === 'As soon as published' ? ' selected' : '') + '>As soon as published</option><option' + (S.nmRegStart === 'At a specified date/time' ? ' selected' : '') + '>At a specified date/time</option></select>', false, inh) +
+      f('nmrc', 'Registration closure', '<input id="nmrc" class="inp" type="date" value="' + esc(S.nmRegClose) + '" data-model="nmRegClose">', false, g ? 'Can differ from the group closure; you can also close this meeting registration at any time' : '') +
+      f('nml', 'Location *', '<input id="nml" class="inp" list="nmlocs" placeholder="Choose in the list or type a location" value="' + esc(S.nmLoc) + '" data-model="nmLoc" data-rerender="1"><datalist id="nmlocs"><option value="Online"><option value="ETSI premises, Sophia Antipolis, FR"><option value="Brussels, BE"><option value="Berlin, DE"><option value="Valencia, ES"></datalist>', false, inh) +
+      f('nmc', 'Meeting contact(s)', '<input id="nmc" class="inp" placeholder="Search a contact" value="' + esc(S.nmContact) + '" data-model="nmContact">', false, inh) +
+      f('nmi', 'Additional information', '<textarea id="nmi" class="inp" placeholder="Displayed on the meeting page" data-model="nmInfo">' + esc(S.nmInfo) + '</textarea>', true) +
+      '</div>' + (msg ? '<div role="alert" style="background:#FCF1E6;color:#8A4510;border-radius:8px;padding:10px 14px;font-size:13px">' + msg + '</div>' : '') +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between"><div>' + (g && g.meetings.length ? '<button class="btn" data-act="nmClone">Clone the first meeting of the group</button>' : '') + '</div>' +
+      '<div style="display:flex;gap:8px"><button class="btn" data-act="nmCancel">Cancel</button><button class="btn btn-p" data-act="nmSave"' + dis(bad || (!S.nmLoc.trim())) + '>Save meeting</button></div></div></section>';
+    return h;
+  }
+
+  function viewRegister() {
+    var g = S.groups.find(function (x) { return x.id === S.regGid; }), td = todayStr();
+    var open = g.meetings.filter(function (m) { return m.end >= td; }), sel3 = g.meetings.filter(function (m) { return S.regSel[m.id]; });
+    var wm = '<div aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;z-index:6;opacity:.1;background-image:url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22800%22%20height=%22320%22%3E%3Cg%20transform=%22rotate%28-22%20400%20160%29%22%20font-family=%22Arial,Helvetica,sans-serif%22%20font-size=%2219%22%20font-weight=%22700%22%20fill=%22%23000%22%20text-anchor=%22middle%22%3E%3Ctext%20x=%22400%22%20y=%22150%22%3ESelect%20meetings%20in%20the%20group%20or%20follow%20actual%20process%3C/text%3E%3Ctext%20x=%22400%22%20y=%22180%22%3EMockup%20only%20for%20workflow%20purpose%3C/text%3E%3C/g%3E%3C/svg%3E);background-repeat:repeat"></div>';
+    var h = wm + '<nav aria-label="Breadcrumb" class="muted" style="font-size:13px;display:flex;gap:8px"><a href="#" data-act="go" data-arg="list">' + (S.site === 'ETSI' ? '&larr; Back to list' : 'Events') + '</a><span aria-hidden="true">/</span><span style="color:#1B2414;font-weight:600">Registration</span></nav>' +
+      '<div style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span class="tag" style="' + FAM[g.family] + '">' + g.family + '</span><span class="tag" style="background:#F1F3EE;color:#3A4334;font-weight:600">' + g.kind + '</span></div>' +
+      '<h1 style="font-size:30px">' + esc(g.title) + '</h1><p style="margin:0;font-size:17px;font-weight:600;color:var(--pd)">' + range(g.start, g.end) + '</p><p class="muted" style="margin:0">' + esc(g.location) + ' · Registration closes ' + esc(g.regClose) + '</p></div>';
+    var steps = ['Select meetings', 'Registration details', 'Confirmation'];
+    h += '<ol style="display:flex;flex-wrap:wrap;gap:10px;list-style:none;margin:0;padding:0">' + steps.map(function (t, i) { var on = S.regStep === i + 1; return '<li style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:' + (on ? 700 : 500) + ';color:' + (on ? 'var(--pd)' : '#5B6655') + '"><span style="width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:' + (on ? 'var(--p)' : '#E4E8DF') + ';color:' + (on ? '#fff' : '#4A5245') + '">' + (i + 1) + '</span>' + t + '</li>'; }).join('') + '</ol>';
+    if (S.regStep === 1) {
+      h += '<section class="card" style="overflow:hidden"><div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:16px 20px;border-bottom:1px solid #EEF1EA"><h2>Meetings in this ' + (g.kind === 'Event group' ? 'event group' : 'meeting group') + '</h2><span class="muted" style="font-size:13px">' + sel3.length + ' of ' + g.meetings.length + ' selected · <a href="#" data-act="regAll" data-arg="1">Select all</a> · <a href="#" data-act="regAll" data-arg="0">Select none</a></span></div>';
+      g.meetings.forEach(function (m) {
+        var ended = m.end < td;
+        h += '<label style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;padding:14px 20px;border-bottom:1px solid #EEF1EA;cursor:' + (ended ? 'not-allowed' : 'pointer') + ';opacity:' + (ended ? .55 : 1) + '"><input type="checkbox" data-act="regToggle" data-arg="' + m.id + '"' + (S.regSel[m.id] ? ' checked' : '') + dis(ended) + ' style="width:20px;height:20px;accent-color:var(--p)"><span style="flex:1 1 220px;display:flex;flex-direction:column;gap:2px"><span style="font-weight:700">' + esc(m.ref) + '</span><span class="muted" style="font-size:13px">' + esc(m.body) + '</span></span><span style="flex:0 1 200px">' + range(m.start, m.end) + '</span><span style="flex:0 1 220px" class="muted">' + esc(m.location) + '</span>' + (ended ? '<span class="pill" style="background:#ECEEEA;color:#4A5245">Ended</span>' : '') + '</label>';
+      });
+      h += '<div style="padding:16px 20px;display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center"><span class="muted" style="font-size:13px">All meetings are selected by default. Deselect the ones you will not attend.</span><div style="display:flex;gap:8px"><button class="btn" data-act="go" data-arg="list">Cancel</button><button class="btn btn-p" data-act="regNext"' + dis(!sel3.length) + '>Register</button></div></div></section>';
+    } else if (S.regStep === 2) {
+      h += '<section class="card" style="overflow:hidden"><div style="padding:16px 20px;border-bottom:1px solid #EEF1EA"><h2>Bulk registration</h2><p class="muted" style="margin:4px 0 0;font-size:13px">Pre-filled with your selected meetings. Choose how you attend each one.</p></div>';
+      sel3.forEach(function (m) {
+        var md = S.regMode[m.id] || (m.location === 'Online' ? 'on' : 'f2f');
+        h += '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;padding:14px 20px;border-bottom:1px solid #EEF1EA"><span style="flex:1 1 220px;display:flex;flex-direction:column;gap:2px"><span style="font-weight:700">' + esc(m.ref) + '</span><span class="muted" style="font-size:13px">' + range(m.start, m.end) + ' · ' + esc(m.location) + '</span></span><div class="segs" role="group" aria-label="Attendance mode"><button class="seg' + (md === 'f2f' ? ' on' : '') + '" data-act="regMode" data-arg="' + m.id + '|f2f"' + dis(m.location === 'Online') + '>Face to face</button><button class="seg' + (md === 'on' ? ' on' : '') + '" data-act="regMode" data-arg="' + m.id + '|on">Online</button></div></div>';
+      });
+      h += '<div style="padding:16px 20px;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end"><button class="btn" data-act="regBack">Back</button><button class="btn btn-p" data-act="regConfirm">Confirm registration (' + sel3.length + ')</button></div></section>';
+    } else {
+      h += '<section class="card" style="padding:28px;display:flex;flex-direction:column;gap:12px;align-items:flex-start"><span class="pill" style="background:#E6F2DA;color:#2F6610">Registered</span><h2>You are registered to ' + sel3.length + ' meeting' + (sel3.length === 1 ? '' : 's') + '</h2>' +
+        '<ul style="margin:0;padding-left:18px;line-height:1.7">' + sel3.map(function (m) { return '<li>' + esc(m.ref) + ' · ' + range(m.start, m.end) + '</li>'; }).join('') + '</ul>' +
+        '<p class="muted" style="margin:0;font-size:13px">A confirmation e-mail was sent. It contains a link to update your selection later.</p>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="regBack1">Update my registration (link in the e-mail)</button></div></section>';
+    }
+    return h;
+  }
+
   function viewNew() {
-    var isEtsi = S.site === 'ISET', it = isEtsi ? ' (P3GP only)' : '';
+    var isEtsi = S.site === 'ETSI', it = isEtsi ? ' (3GPP only)' : '';
     var T = [['standalone', 'Standalone meeting', 'One meeting or event, not linked to a group. Uses the current creation process.'], ['mgroup', 'Meeting group', 'Groups body-related meetings (WGs, TCs) that share dates, location and participants.'], ['egroup', 'Event group', 'Groups activity-related events, open to external users by default.']];
     var h = '<div style="display:flex;flex-direction:column;gap:4px"><h1>New</h1><p class="muted" style="margin:0">Choose what you want to create</p></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">';
     T.forEach(function (t) { h += '<button class="tile' + (S.newType === t[0] ? ' on' : '') + '" data-act="newType" data-arg="' + t[0] + '" aria-pressed="' + (S.newType === t[0]) + '"><span style="font-size:16px;font-weight:700">' + t[1] + '</span><span class="muted" style="font-size:13px;line-height:1.5">' + t[2] + '</span></button>'; });
@@ -423,16 +626,16 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     function f(id, lbl, inner, full) { return '<div class="field' + (full ? ' full' : '') + '"><label for="' + id + '">' + lbl + '</label>' + inner + '</div>'; }
     h += '<section class="card" style="padding:24px;display:flex;flex-direction:column;gap:20px"><h2>' + (S.newType === 'egroup' ? 'Event group' : 'Meeting group') + ': level 1 details</h2><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px 20px">' +
       f('nt', 'Title (also the badge title) *', '<input id="nt" class="inp" placeholder="e.g. 2027-August-EU-RAN WGs" value="' + esc(S.newTitle) + '" data-model="newTitle" data-rerender="1">', true) +
-      '<div class="field"><span style="font-size:13px;font-weight:600;color:#3A4334">Body family</span><span style="display:flex;align-items:center;gap:8px;min-height:40px"><span class="tag" style="background:var(--ps);color:var(--pd)">' + S.site + '</span>Set by this portal</span></div>' +
-      f('nl', 'Location *', '<input id="nl" class="inp" placeholder="City, country or ISET premises" value="' + esc(S.newLoc) + '" data-model="newLoc">') +
+      (isEtsi ? '<div class="field"><label for="nf">Body family</label><select id="nf" class="inp" data-model="newFamily"><option' + (S.newFamily === 'ETSI' ? ' selected' : '') + '>ETSI</option><option' + (S.newFamily === '3GPP' ? ' selected' : '') + '>3GPP</option></select><span class="muted" style="font-size:12px">Defines the display in portals and in the meeting calendar</span></div>' : '<div class="field"><span style="font-size:13px;font-weight:600;color:#3A4334">Body family</span><span style="display:flex;align-items:center;gap:8px;min-height:40px"><span class="tag" style="background:var(--ps);color:var(--pd)">' + S.site + '</span>Set by this portal</span></div>') +
+      f('nl', 'Location *', '<input id="nl" class="inp" placeholder="City, country or ETSI premises" value="' + esc(S.newLoc) + '" data-model="newLoc">') +
       f('ns', 'Start date *', '<input id="ns" class="inp" type="date" value="' + esc(S.newStart) + '" data-model="newStart">') +
       f('ne', 'End date *', '<input id="ne" class="inp" type="date" value="' + esc(S.newEnd) + '" data-model="newEnd">') +
       f('rs', 'Registration start', '<select id="rs" class="inp"><option>As soon as published</option><option>At a specified date/time</option></select>') +
-      f('rc', 'Registration closure', '<input id="rc" class="inp" type="date">') +
-      f('mc', 'Event / meeting contact(s)', '<input id="mc" class="inp" placeholder="Search a contact">') +
+      f('rc', 'Registration closure', '<input id="rc" class="inp" type="date" value="' + esc(S.newRegClose) + '" data-model="newRegClose">') +
+      f('mc', 'Event / meeting contact(s)', '<input id="mc" class="inp" placeholder="Search a contact" value="' + esc(S.newContact) + '" data-model="newContact">') +
       f('it', 'IT support' + it, '<input id="it" class="inp" placeholder="Search an IT support person"' + dis(isEtsi) + '>') +
       f('sv', 'Satisfaction survey URL' + it, '<input id="sv" class="inp" placeholder="https://…"' + dis(isEtsi) + '>', true) +
-      f('ai', 'Additional information', '<textarea id="ai" class="inp" placeholder="Displayed on the group page"></textarea>', true) +
+      f('ai', 'Additional information', '<textarea id="ai" class="inp" placeholder="Displayed on the group page" data-model="newInfo">' + esc(S.newInfo) + '</textarea>', true) +
       '</div><p class="muted" style="margin:0;font-size:13px">Meetings created inside this group inherit its dates, registration window, location and contacts. Each value stays editable per meeting.</p>' +
       '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end"><button class="btn" data-act="go" data-arg="list">Cancel</button><button class="btn btn-p" data-act="createGroup"' + dis(!S.newTitle.trim()) + '>Create group and add meetings</button></div></section>';
     return h;
@@ -452,7 +655,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     } else {
       var mask = S.k4eKey.length > 4 ? '•••• •••• ' + esc(S.k4eKey.slice(-4)) : '••••';
       var cb = function (t, c) { return '<label style="display:flex;align-items:center;gap:8px;font-weight:500"><input type="checkbox"' + (c ? ' checked' : '') + ' style="width:18px;height:18px;accent-color:var(--p)"> ' + t + '</label>'; };
-      h += '<dl class="kv" style="grid-template-columns:160px 1fr;font-size:14px"><dt>API key</dt><dd style="font-family:ui-monospace,monospace">' + mask + '</dd><dt>Connected by</dt><dd>Olga Kozlova</dd><dt>Linked groups</dt><dd>' + S.groups.filter(function (x) { return x.k4e.linked; }).length + '</dd></dl>' +
+      h += '<dl class="kv" style="grid-template-columns:160px 1fr;font-size:14px"><dt>API key</dt><dd style="font-family:ui-monospace,monospace">' + mask + '</dd><dt>Connected by</dt><dd>Super User</dd><dt>Linked groups</dt><dd>' + S.groups.filter(function (x) { return x.k4e.linked; }).length + '</dd></dl>' +
         '<fieldset style="border:1px solid #DDE3D6;border-radius:10px;padding:14px 16px;margin:0;display:flex;flex-direction:column;gap:10px"><legend style="font-size:13px;font-weight:600;padding:0 6px">Synchronisation</legend>' +
         cb('Push the meeting list of linked groups', true) + cb('Share face-to-face participant lists with the host', true) + cb('Import on-site attendance back into MMP', false) + '</fieldset>' +
         '<p class="muted" style="margin:0;font-size:13px">Sharing participant data with a host requires the GDPR agreement for that event.</p><div><button class="btn btn-d" data-act="disconnectK4e">Disconnect</button></div>';
@@ -466,9 +669,10 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     S.groups.forEach(function (g) { g.status = g.end < td ? 'ended' : g.start <= td ? 'ongoing' : 'upcoming'; });
     var ae = document.activeElement, fid = ae && ae.id, ss = null;
     try { ss = ae && ae.selectionStart; } catch (e) {}
-    app.className = S.site === 'ISET' ? 's-etsi' : 's-3gpp';
+    app.className = S.site === 'ETSI' ? 's-etsi' : 's-3gpp';
     var nav = function (v, l) { var on = S.view === v || (v === 'list' && S.view === 'detail'); return '<button class="seg" data-act="go" data-arg="' + v + '" style="' + (on ? 'background:var(--ps);color:var(--pd)' : '') + '">' + l + '</button>'; };
-    var body = S.view === 'meetings' ? viewMeetings() : S.view === 'detail' ? viewDetail() : S.view === 'new' ? viewNew() : S.view === 'settings' ? viewSettings() : viewList();
+    if (S.site === 'ETSI' && S.role === 'participant' && ['detail', 'new', 'mform', 'meeting', 'settings'].indexOf(S.view) >= 0) S.view = 'list';
+    var body = S.view === 'meetings' ? viewMeetings() : S.view === 'mform' ? viewMeetingForm() : S.view === 'meeting' ? viewMeetingPage() : S.view === 'register' ? viewRegister() : S.view === 'detail' ? viewDetail() : S.view === 'new' ? viewNew() : S.view === 'settings' ? viewSettings() : viewList();
     var now = new Date(), pad = function (n) { return String(n).padStart(2, '0'); };
     var clock = now.getDate() + ' ' + MON[now.getMonth()] + ' ' + now.getFullYear() + ' - ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds()) + ' (GMT+1)';
     var TABS = ['Meetings', 'Events', 'TDocs', 'Change Requests', 'Liaison statements', 'Releases', 'Work Plan', 'Specifications'];
@@ -477,28 +681,15 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     var proto =
       '<div style="background:#1B2414;color:#E8ECE4;font-size:12px"><div class="wrap" style="padding-top:6px;padding-bottom:6px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px"><span>Prototype · view as portal:</span>' +
       '<div role="group" aria-label="Portal" style="display:flex;gap:2px;background:#333C2D;border-radius:6px;padding:2px">' +
-      ['P3GP', 'ISET'].map(function (s) { return '<button class="seg" data-act="site" data-arg="' + s + '" style="min-height:28px;font-size:12px;' + (S.site === s ? 'background:#fff;color:#1B2414' : 'color:#E8ECE4') + '">' + s + '</button>'; }).join('') +
-      '</div><span style="color:#B8C0B2">Shared back end: same groups, meetings and participants database</span></div></div>';
-    if (S.site === 'ISET') {
-      app.innerHTML = proto +
-        '<main class="wrap" style="flex:1;padding-top:80px;padding-bottom:80px;display:flex;justify-content:center">' +
-        '<div class="card" style="max-width:560px;width:100%;padding:40px 32px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center">' +
-        '<svg aria-hidden="true" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#1D5FA8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V9l7-5 7 5v11"/><path d="M9 20v-6h6v6"/></svg>' +
-        '<h1>ISET Portal</h1><p style="margin:0;font-size:16px;font-weight:600;color:#1D4E89">Under construction</p>' +
-        '<p class="muted" style="margin:0;line-height:1.5">The ISET front end for event groups is not designed yet. It will use the same back end as the P3GP portal.</p>' +
-        '<button class="btn" data-act="site" data-arg="P3GP" style="margin-top:8px">View the P3GP portal</button></div></main>' +
-        (S.toast ? '<div class="toast" role="status">' + esc(S.toast) + '</div>' : '');
-      if (fid) { var el0 = document.getElementById(fid); if (el0) el0.focus(); }
-      return;
-    }
-    app.innerHTML = proto +
-      '<header style="background:#fff">' +
+      ['3GPP', 'ETSI'].map(function (s) { return '<button class="seg" data-act="site" data-arg="' + s + '" style="min-height:28px;font-size:12px;' + (S.site === s ? 'background:#fff;color:#1B2414' : 'color:#E8ECE4') + '">' + s + '</button>'; }).join('') +
+      '</div>' + (S.site === 'ETSI' ? '<span style="margin-left:8px">View as:</span><div role="group" aria-label="Role" style="display:flex;gap:2px;background:#333C2D;border-radius:6px;padding:2px">' + [['creator', 'Creator'], ['participant', 'Participant']].map(function (r) { return '<button class="seg" data-act="role" data-arg="' + r[0] + '" style="min-height:28px;font-size:12px;' + (S.role === r[0] ? 'background:#fff;color:#1B2414' : 'color:#E8ECE4') + '">' + r[1] + '</button>'; }).join('') + '</div>' : '') + '<span style="color:#B8C0B2">Shared back end: same groups, meetings and participants database</span></div></div>';
+    var hdr = '<header style="background:#fff">' +
       '<div class="wrap" style="padding-top:14px;padding-bottom:14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px">' +
-      '<div style="display:flex;align-items:flex-end;gap:20px"><div style="display:flex;flex-direction:column;line-height:1"><span style="font-size:34px;font-weight:800;letter-spacing:-2px;color:#1B2414">P3GP</span><span style="font-size:8px;letter-spacing:2.4px;color:#3A4334;margin-top:4px">A GLOBAL INITIATIVE</span></div>' +
+      '<div style="display:flex;align-items:flex-end;gap:20px"><div style="display:flex;flex-direction:column;line-height:1"><span style="font-size:34px;font-weight:800;letter-spacing:-2px;color:#1B2414">3GPP</span><span style="font-size:8px;letter-spacing:2.4px;color:#3A4334;margin-top:4px">A GLOBAL INITIATIVE</span></div>' +
       '<span style="font-size:30px;font-weight:600;color:#1B2414;font-family:inherit;letter-spacing:-.5px">Portal</span></div>' +
       '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px">' +
       '<div style="display:flex;flex-direction:column;align-items:center;font-size:11px;color:#3A4334"><span>' + clock + '</span><span>Sophia Antipolis - France</span></div>' +
-      '<span style="font-size:13px;color:#3A4334">Welcome <strong>Olga Kozlova</strong></span>' +
+      '<span style="font-size:13px;color:#3A4334">Welcome <strong>Super User</strong></span>' +
       '<button class="btn" data-act="noop" data-arg="Logout" style="min-height:34px;font-size:13px">Logout</button></div></div>' +
       '<div class="wrap" style="display:flex;flex-wrap:wrap;gap:8px 24px;padding-bottom:10px">' +
       '<button data-act="noop" data-arg="Select TSG/WG" style="font:inherit;font-size:13px;font-weight:700;color:#fff;background:#3F8314;border:0;border-radius:6px;min-height:40px;padding:0 16px;flex:0 1 215px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer">Select TSG/WG<svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 9l6 6 6-6z"/></svg></button>' +
@@ -512,16 +703,34 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
           (on ? 'background:#fff;color:#2F6610;border:1px solid #C9D9B4;border-bottom-color:#fff' : 'background:#3F8314;color:#fff;border:1px solid #3F8314') + '">' + t + '</button>';
       }).join('') +
       '</nav></div></div>' +
-      
-      '</header>' +
+      '</header>';
+    if (S.site === 'ETSI') {
+      var EM = ['Home', 'Resources', 'People', 'Services', 'IPR', 'Manage', 'Search', 'Events', 'editors', 'Help', 'WEBstore'];
+      hdr = '<header style="background:#fff">' +
+        '<div class="wrap" style="padding-top:10px;padding-bottom:10px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px">' +
+        '<div style="display:flex;align-items:center;gap:14px"><span style="font-size:42px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:#1D4E8F;line-height:1">ETSI</span>' +
+        '<span style="font-size:20px;letter-spacing:1.5px;color:#2E6BA8;font-weight:500">The Standards People</span></div>' +
+        '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;background:linear-gradient(#EAF1F8,#D6E3F0);border:1px solid #C3D4E6;border-radius:12px;padding:8px 18px">' +
+        '<div style="display:flex;flex-direction:column;align-items:center;font-size:11px;color:#2B3B4E"><span>' + clock + '</span><span>Sophia Antipolis - France</span></div>' +
+        '<div style="display:flex;flex-direction:column;gap:3px;font-size:13px;color:#2B3B4E"><span>Welcome <strong>Super User</strong></span><span style="text-decoration:underline">Super.User@etsi.org</span></div>' +
+        '<div style="display:flex;flex-direction:column;align-items:center;gap:4px"><button class="btn" data-act="noop" data-arg="Logout" style="min-height:28px;font-size:13px;padding:0 18px">Logout</button><span style="font-size:12px;text-decoration:underline;color:#1B2B3E">Change Password</span></div></div></div>' +
+        '<div style="background:linear-gradient(#F4F4F4,#E4E4E4);border-bottom:1px solid #D0D0D0;box-shadow:0 2px 3px rgba(0,0,0,.08)"><nav class="wrap scroll" aria-label="Portal menu" style="display:flex;align-items:center;flex-wrap:wrap">' +
+        EM.map(function (m, i) {
+          var on = (m === 'Home' && S.view === 'meetings');
+          var act = m === 'Home' ? 'go' : m === 'Events' ? 'go' : 'noop', arg = m === 'Home' ? 'meetings' : m === 'Events' ? 'list' : m;
+          return (i ? '<span aria-hidden="true" style="color:#9A9A9A">|</span>' : '') + '<button data-act="' + act + '" data-arg="' + arg + '"' + (on ? ' aria-current="page"' : '') + ' style="font:inherit;font-size:14px;font-weight:700;color:' + (on ? 'var(--p)' : '#2A2A2A') + ';background:transparent;border:0;border-bottom:3px solid ' + (on ? 'var(--p)' : 'transparent') + ';min-height:42px;padding:0 16px;cursor:pointer">' + m + '</button>';
+        }).join('') + '</nav></div></header>';
+    }
+    app.innerHTML = proto + hdr +
       '<main class="wrap" style="flex:1;padding-top:20px;padding-bottom:64px;display:flex;flex-direction:column;gap:24px">' + body + '</main>' +
       (S.toast ? '<div class="toast" role="status">' + esc(S.toast) + '</div>' : '');
     if (fid) { var el = document.getElementById(fid); if (el) { el.focus(); try { if (ss != null) el.setSelectionRange(ss, ss); } catch (e) {} } }
   }
 
   var A = {
-    mperiod: function (p) { S.mPeriod = p; },
-    mreset: function () { S.mGroup = 'All'; S.mLoc = 'All'; S.mPeriod = '1y'; S.mSort = 'date'; S.mOrder = 'asc'; S.mQuery = ''; },
+    mpage: function (n) { S.mPage = Number(n); },
+    mperiod: function (p) { S.mPeriod = p; S.mPage = 1; },
+    mreset: function () { S.mGroup = 'All'; S.mLoc = 'All'; S.mPeriod = '1y'; S.mSort = 'date'; S.mOrder = 'asc'; S.mQuery = ''; S.mPage = 1; },
     mtoggle: function (id) { S.mOpen[id] = !S.mOpen[id]; },
     newMeeting: function () { S.newType = 'standalone'; S.view = 'new'; },
     exportMtg: function () { flash('meetings_list.xlsx exported (' + mtgInfo.length + ' meetings).'); return true; },
@@ -529,8 +738,13 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     noop: function (what) { flash(what + ' is not part of this prototype.'); return true; },
     go: function (v) { S.view = v; S.addOpen = false; },
     site: function (s) { S.site = s; S.view = 'list'; S.selId = null; S.addOpen = false; },
-    period: function (p) { S.period = p; },
-    open: function (id) { S.view = 'detail'; S.selId = id; S.addOpen = false; S.k4eEventInput = ''; S.k4eKey = ''; S.k4eStatus = 'none'; S.addQuery = ''; },
+    period: function (p) { S.period = p; S.ePage = 1; },
+    epage: function (n) { S.ePage = Number(n); },
+    open: function (id) {
+      var cg = S.groups.find(function (x) { return x.id === id; });
+      if (S.site === 'ETSI' && cg && cg.kind === 'Standalone meeting' && cg.meetings.length) { A.openMtg(cg.meetings[0].id); return; }
+      if (S.site === 'ETSI' && S.role === 'participant') { openReg(id); return; } S.view = 'detail'; S.selId = id; S.addOpen = false; S.k4eEventInput = ''; S.k4eKey = ''; S.k4eStatus = 'none'; S.addQuery = ''; },
+    exportGrp: function (id) { var g = S.groups.find(function (x) { return x.id === id; }); flash(g.title + '_participants.xlsx exported (' + fmt(sum(g.meetings, 'f2f') + sum(g.meetings, 'online')) + ' registered participants).'); return true; },
     exportAll: function () { flash('events_list.xlsx exported (' + exportInfo.n + ' groups, ' + exportInfo.m + ' meetings).'); return true; },
     exportParticipants: function () { var g = sel(); flash(g.title + '_participants_per_meeting.xlsx exported (' + g.meetings.length + ' meetings, ' + fmt(sum(g.meetings, 'f2f') + sum(g.meetings, 'online')) + ' registered participants).'); return true; },
     exportList: function () {
@@ -548,12 +762,55 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     },
     toggleAdd: function () { S.addOpen = !S.addOpen; S.addQuery = ''; },
     toggleNotify: function () { S.notify = !S.notify; },
-    createInGroup: function () { flash('Opens the meeting form with the group values pre-filled. Breadcrumb: ' + sel().title); return true; },
+    createInGroup: function () { openMF(sel(), null); },
+    cloneFirst: function () { var g = sel(); openMF(g, g.meetings[0]); },
+    newStandalone: function () { S.menuOpen = false; openMF(null, null); },
+    newMGroup: function () { S.menuOpen = false; S.newType = 'mgroup'; S.view = 'new'; },
+    newEGroup: function () { S.menuOpen = false; S.newType = 'egroup'; S.view = 'new'; },
+    openMtg: function (id) {
+      var f = findMtg(id);
+      if (!f) return;
+      if (S.role === 'participant') { A.regMeeting(f.cont ? f.cont.id : id); return f.cont ? undefined : true; }
+      S.mtgId = id; S.linkGid = ''; S.view = 'meeting';
+    },
+    linkMtg: function () {
+      var f = findMtg(S.mtgId), g = S.groups.find(function (x) { return x.id === S.linkGid; });
+      if (!f || !g) return;
+      S.groups = S.groups.filter(function (x) { return !(f.cont && x.id === f.cont.id); }).map(function (x) { return x.id === g.id ? Object.assign({}, x, { meetings: x.meetings.concat([f.m]) }) : x; });
+      S.pool = S.pool.filter(function (x) { return x.id !== f.m.id; });
+      flash(f.m.ref + ' linked to ' + g.title + '.'); S.view = 'detail'; S.selId = g.id; return true;
+    },
+    myAll: function () { S.myAll = !S.myAll; },
+    toggleMenu: function () { S.menuOpen = !S.menuOpen; },
+    rowMenu: function (id) { S.rowMenu = S.rowMenu === id ? null : id; },
+    role: function (r) { S.role = r; S.menuOpen = false; if (['detail', 'new', 'mform'].indexOf(S.view) >= 0 && r === 'participant') S.view = 'list'; },
+    nmCat: function (c) { S.nmCat = c; },
+    nmCancel: function () { var g = S.nmGid; if (g) { S.view = 'detail'; S.selId = g; } else S.view = 'meetings'; },
+    nmClone: function () { var g = S.groups.find(function (x) { return x.id === S.nmGid; }); fillMF(g, g.meetings[0]); },
+    nmSave: function () {
+      var g = S.groups.find(function (x) { return x.id === S.nmGid; }), isE = (g ? g.kind === 'Event group' : S.nmCat === 'Events');
+      var m = { id: 'u' + Date.now(), ref: S.nmTitle.trim(), body: S.nmBody.trim() || (isE ? 'Event' : 'ETSI'), start: S.nmStart, end: S.nmEnd, location: S.nmLoc.trim(), f2f: 0, online: 0, attF2f: 0, attOnline: 0, regClose: S.nmRegClose };
+      if (g) { S.groups = S.groups.map(function (x) { return x.id === g.id ? Object.assign({}, x, { meetings: x.meetings.concat([m]) }) : x; }); S.view = 'detail'; S.selId = g.id; flash(m.ref + ' added to ' + g.title + '.'); }
+      else { S.pool = S.pool.concat([Object.assign(m, { family: S.site })]); S.view = 'meetings'; flash(m.ref + ' created as a standalone meeting.'); }
+      return true;
+    },
+    regMeeting: function (id) {
+      var g = S.groups.find(function (x) { return x.id === id; }) || S.groups.find(function (x) { return x.meetings.some(function (m) { return m.id === id; }); });
+      if (!g) { flash('Standalone meeting registration uses the current form (not part of this prototype).'); return true; }
+      openReg(g.id, id);
+    },
+    regToggle: function (id) { S.regSel[id] = !S.regSel[id]; },
+    regAll: function (v) { var g = S.groups.find(function (x) { return x.id === S.regGid; }), td = todayStr(); g.meetings.forEach(function (m) { S.regSel[m.id] = v === '1' && m.end >= td; }); },
+    regNext: function () { S.regStep = 2; },
+    regBack: function () { S.regStep = 1; },
+    regBack1: function () { S.regStep = 1; },
+    regMode: function (a) { var p = a.split('|'); S.regMode[p[0]] = p[1]; },
+    regConfirm: function () { S.regStep = 3; flash('Registration saved. A confirmation e-mail was sent.'); return true; },
     link: function (id) {
       var g = sel(), p = S.pool.find(function (x) { return x.id === id; });
       upd(function (x) { return Object.assign({}, x, { meetings: x.meetings.concat([p]) }); });
       S.pool = S.pool.filter(function (x) { return x.id !== id; });
-      flash(p.ref + ' linked to the group.' + (g.family === 'ISET' && S.notify ? ' Registered participants will be notified.' : '')); return true;
+      flash(p.ref + ' linked to the group.' + (g.family === 'ETSI' && S.notify ? ' Registered participants will be notified.' : '')); return true;
     },
     detach: function (id) {
       var g = sel(), m = g.meetings.find(function (x) { return x.id === id; });
@@ -573,8 +830,8 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     openStandalone: function () { flash('Opens the current Meetings Management form.'); return true; },
     createGroup: function () {
       var id = 'g' + Date.now();
-      var ng = { id: id, title: S.newTitle.trim(), family: S.site, kind: S.newType === 'egroup' ? 'Event group' : 'Meeting group', start: S.newStart, end: S.newEnd, location: S.newLoc.trim() || 'To be defined', regStart: 'As soon as published', regClose: 'not set', contact: 'Olga Kozlova', status: 'upcoming', k4e: { linked: false }, meetings: [] };
-      S.groups = [ng].concat(S.groups); S.view = 'detail'; S.selId = id; S.addOpen = true; S.newTitle = S.newLoc = S.newStart = S.newEnd = '';
+      var ng = { id: id, title: S.newTitle.trim(), family: S.site === 'ETSI' ? S.newFamily : S.site, kind: S.newType === 'egroup' ? 'Event group' : 'Meeting group', start: S.newStart, end: S.newEnd, location: S.newLoc.trim() || 'To be defined', regStart: 'As soon as published', regClose: S.newRegClose ? range(S.newRegClose, S.newRegClose) : 'not set', contact: S.newContact.trim() || 'Super User', info: S.newInfo.trim(), status: 'upcoming', k4e: { linked: false }, meetings: [] };
+      S.groups = [ng].concat(S.groups); S.view = 'detail'; S.selId = id; S.addOpen = true; S.newTitle = S.newLoc = S.newStart = S.newEnd = S.newRegClose = S.newInfo = S.newContact = '';
       flash(ng.kind + ' created. Add its first meeting.'); return true;
     },
     testK4e: function () { if (S.k4eKey.trim().length >= 8) { S.k4eStatus = 'ok'; flash('Key4Events connected.'); return true; } S.k4eStatus = 'error'; },
@@ -582,18 +839,25 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
   };
 
   app.addEventListener('click', function (e) {
+    var outside = (S.menuOpen || S.rowMenu) && !e.target.closest('[data-menu]');
+    if (outside) { S.menuOpen = false; S.rowMenu = null; }
     var t = e.target.closest('[data-act]');
-    if (!t || t.disabled) return;
+    if (!t || t.disabled) { if (outside) render(); return; }
     if (t.tagName === 'A') e.preventDefault();
-    var done = A[t.getAttribute('data-act')](t.getAttribute('data-arg'));
+    var act0 = t.getAttribute('data-act');
+    if (act0 === 'rowMenu') { var rc = t.getBoundingClientRect(); S.rowPos = { top: Math.round(Math.min(rc.bottom + 4, window.innerHeight - 190)), right: Math.round(window.innerWidth - rc.right) }; } if (act0 !== 'rowMenu') S.rowMenu = null;
+    var done = A[act0](t.getAttribute('data-arg'));
     if (!done) render();
   });
   app.addEventListener('input', function (e) {
     var k = e.target.getAttribute('data-model');
     if (!k) return;
     S[k] = e.target.value;
+    if (k.charAt(0) === 'm' && k !== 'mPage') S.mPage = 1;
+    if (k === 'ePer' || k === 'query' || k === 'kind') S.ePage = 1;
     if (e.target.hasAttribute('data-rerender')) render();
   });
+  window.addEventListener('scroll', function () { if (S.rowMenu) { S.rowMenu = null; render(); } }, true);
   render();
 })();
 </script>
