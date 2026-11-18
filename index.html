@@ -91,7 +91,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
   var M = function (id, ref, body, s, e, loc, f2f, on, af, ao) { return { id: id, ref: ref, body: body, start: s, end: e, location: loc, f2f: f2f, online: on, attF2f: af || 0, attOnline: ao || 0 }; };
   var STO = 'Stockholm, SE', GOT = 'Gothenburg Metropolitan Area, SE', SOP = 'ETSI premises, Sophia Antipolis, FR';
   var S = {
-    view: 'list', site: '3GPP', mPage: 1, mPer: 10, role: 'creator', myAll: false, myReg: { m31: 'Face to face', n25: 'Online', n18: 'Online' }, mtgId: null, linkGid: '', ePage: 1, ePer: 10, menuOpen: false, rowMenu: null, rowPos: { top: 0, right: 0 }, newFamily: 'ETSI', newRegClose: '', newInfo: '', newContact: '', nmGid: null, nmTitle: '', nmCat: 'Bodies', nmBody: '', nmStart: '', nmEnd: '', nmRegStart: 'As soon as published', nmRegClose: '', nmLoc: '', nmContact: '', nmInfo: '', regGid: null, regSel: {}, regStep: 1, regMode: {}, mGroup: 'All', mPeriod: '1y', mLoc: 'All', mSort: 'date', mOrder: 'asc', mQuery: '', mOpen: {}, period: 'upcoming', kind: 'All', query: '', selId: null, addOpen: false, notify: true, toast: '',
+    view: 'list', site: '3GPP', mPage: 1, mPer: 10, role: 'creator', myAll: false, myReg: { m31: 'Face to face', n25: 'Online', n18: 'Online' }, mtgId: null, linkGid: '', ePage: 1, ePer: 10, menuOpen: false, rowMenu: null, rowPos: { top: 0, right: 0 }, newFamily: 'ETSI', newRegClose: '', newInfo: '', newContact: '', nmGid: null, nmTitle: '', nmCat: 'Bodies', nmBody: '', nmStart: '', nmEnd: '', nmRegStart: 'As soon as published', nmRegClose: '', nmLoc: '', nmContact: '', nmInfo: '', regGid: null, regSel: {}, regStep: 1, regMode: {}, mGroup: 'All', mReg: 'All', eReg: 'All', myAllE: false, mPeriod: '1y', mLoc: 'All', mSort: 'date', mOrder: 'asc', mQuery: '', mOpen: {}, period: 'upcoming', kind: 'All', query: '', selId: null, addOpen: false, notify: true, toast: '',
     k4eKey: '', k4eStatus: 'none', k4eProvider: 'Key4Events', k4eEventInput: '', newType: 'mgroup', newTitle: '', newLoc: '', newStart: '', newEnd: '',
     groups: [
       { id: 'g1', title: '2027-April-EU-CT SA WGs', family: '3GPP', kind: 'Meeting group', start: '2027-04-19', end: '2027-04-23', location: STO, regStart: 'As soon as published', regClose: '5 Apr 2027', contact: 'Meeting support (ETSI)', status: 'upcoming', k4e: { linked: false },
@@ -235,6 +235,16 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
   var flag = function (cc) { return '<svg aria-hidden="true" width="22" height="16" viewBox="0 0 22 16" style="flex:none;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.18)">' + (FLG[cc] || '<rect width="22" height="16" fill="#E3E7DE"/>') + '</svg>'; };
   var cityCell = function (str) { return '<span class="ell" style="font-size:14px;color:#1B2414" title="' + esc(String(str)) + '">' + esc(splitLoc(str).city) + '</span>'; };
   var ctryCell = function (str) { var c = splitLoc(str).cc; return c ? '<span style="display:inline-flex;align-items:center;gap:8px;font-size:14px;min-width:0">' + flag(c) + '<span class="ell">' + (CTRY[c] || c) + '</span></span>' : '<span class="muted" style="font-size:14px">–</span>'; };
+  function myCard(o, td) {
+    var on = o.start <= td;
+    return '<div class="card" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;padding:12px 18px;background:var(--ps);border-color:transparent"><span style="flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:2px"><span class="ell" style="font-size:15px;font-weight:700">' + esc(o.ref) + '</span><span class="muted ell" style="font-size:13px">' + esc(o.sub) + '</span></span>' +
+      '<span style="flex:0 1 190px;display:flex;flex-direction:column;gap:4px"><span style="font-size:14px">' + range(o.start, o.end) + '</span><span class="pill" style="align-self:flex-start;font-size:11px;padding:2px 8px;' + (on ? 'background:#FCF1E6;color:#8A4510' : 'background:#E3ECF8;color:#1D4E89') + '">' + (on ? 'Ongoing' : 'Upcoming') + '</span></span>' +
+      '<span style="flex:0 1 190px" class="muted">' + esc(o.location) + '</span>' +
+      '<span style="flex:0 1 190px"><span class="pill" style="background:#fff;color:var(--pd);border:1px solid var(--p)">' + esc(o.regText) + '</span></span>' +
+      '<span style="display:flex;justify-content:flex-end;gap:2px;margin-left:auto">' + ib(ICX.c, 'Contribute to ' + esc(o.ref), 'noop', 'Contribution') + ib(ICX.reg, 'Update my registration to ' + esc(o.ref), 'regMeeting', o.regId) +
+      '<div data-menu style="position:relative">' + ib(ICX.more, 'More actions for ' + esc(o.ref), 'rowMenu', o.mk) + (S.rowMenu === o.mk ? '<div class="pm" role="menu" style="position:fixed;min-width:210px;top:' + S.rowPos.top + 'px;right:' + S.rowPos.right + 'px">' + [['Documents', 'noop', 'Documents'], ['Contribute', 'noop', 'Contribution'], ['Cancel my registration', 'noop', 'Cancel registration']].map(function (i) { return '<button role="menuitem" data-act="' + i[1] + '" data-arg="' + esc(i[2]) + '">' + i[0] + '</button>'; }).join('') + '</div>' : '') + '</div></span></div>';
+  }
+  function groupRegistered(g) { return g.meetings.some(function (m) { return S.myReg[m.id]; }); }
   var nv = function (k, label, v, shown) { return '<span class="nv" title="' + label + '" style="color:' + (k === 'f2f' ? CF : CO) + '">' + pic(k, 16) + (shown === false ? '<span class="muted" style="font-weight:400">–</span>' : fmt(v)) + '</span>'; };
   function sum(ms, k) { return ms.reduce(function (t, m) { return t + m[k]; }, 0); }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -263,6 +273,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
       if (g.family !== S.site) return false;
       if (S.period === 'upcoming' && g.status === 'ended') return false;
       if (S.period === 'past' && g.status !== 'ended') return false;
+      if (S.site === 'ETSI' && S.eReg === 'Registered' && !groupRegistered(g)) return false;
       if (S.site === 'ETSI' && S.kind !== 'All' && g.kind !== S.kind) return false;
       if (q && (g.title + ' ' + g.location + ' ' + g.meetings.map(function (m) { return m.ref; }).join(' ')).toLowerCase().indexOf(q) < 0) return false;
       return true;
@@ -276,9 +287,21 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     if (S.site === 'ETSI') gs = gs.slice((S.ePage - 1) * eper, S.ePage * eper);
     var h = '<div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px"><div style="display:flex;flex-direction:column;gap:4px"><h1>' + (S.site === 'ETSI' ? 'Meetings' : 'Events') + '</h1>' + (S.site === 'ETSI' ? '<div class="muted" style="margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:14px"><span><strong style="color:#1B2414">' + gs.length + '</strong> meeting' + (gs.length === 1 ? '' : 's') + '</span><span aria-hidden="true">·</span><span>' + epages + ' page' + (epages === 1 ? '' : 's') + '</span><span aria-hidden="true">·</span><label for="epp" style="display:flex;align-items:center;gap:6px">Show <select id="epp" class="inp" data-model="ePer" data-rerender="1" style="min-height:32px;padding:0 8px;width:auto">' + [5, 10, 25, 50].map(function (n) { return '<option value="' + n + '"' + (eper === n ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select> per page</label></div>' : '') + '</div>' +
       '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn" data-act="exportAll">' + I.dl + 'Export list</button>' + (S.site === 'ETSI' ? (S.role === 'creator' ? newMenu('New', true) : '') : '<button class="btn btn-p" data-act="go" data-arg="new">' + I.plus + 'New</button>') + '</div></div>';
+    if (S.site === 'ETSI') {
+      var tdE = todayStr(), mineE = S.groups.filter(function (g) { return g.family === 'ETSI' && g.end >= tdE && groupRegistered(g); }).sort(function (a, b) { return a.start < b.start ? -1 : a.start > b.start ? 1 : 0; });
+      var shE = S.myAllE ? mineE : mineE.slice(0, 1);
+      if (mineE.length) {
+        h += '<section aria-label="My registrations" style="display:flex;flex-direction:column;gap:10px"><h2 style="font-size:18px;font-weight:600">Top ' + shE.length + ' upcoming meeting' + (shE.length === 1 ? '' : 's') + ' for which I am registered' + (mineE.length > 1 ? ' (<a href="#" data-act="myAllE">' + (S.myAllE ? 'Show less' : 'Show all') + '</a>)' : '') + '</h2>';
+        shE.forEach(function (g) {
+          var n = g.meetings.filter(function (m) { return S.myReg[m.id]; });
+          h += myCard({ ref: g.title, sub: g.kind, start: g.start, end: g.end, location: g.location, regText: g.kind === 'Standalone meeting' ? 'Registered · ' + S.myReg[n[0].id] : 'Registered · ' + n.length + ' of ' + g.meetings.length + ' meetings', regId: g.id, mk: 'myg:' + g.id }, tdE);
+        });
+        h += '</section>';
+      }
+    }
     h += '<div class="card" style="padding:14px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px"><div class="segs" role="group" aria-label="Period">' +
       [['upcoming', 'Upcoming'], ['past', 'Ended'], ['all', 'All']].map(function (p) { return '<button class="seg' + (S.period === p[0] ? ' on' : '') + '" data-act="period" data-arg="' + p[0] + '">' + p[1] + '</button>'; }).join('') +
-      '</div>' + (S.site !== 'ETSI' ? '' : '<div><label for="kd" class="sr">Type</label><select id="kd" class="inp" data-model="kind" data-rerender="1" style="min-width:190px">' + ['All', 'Meeting group', 'Event group', 'Standalone meeting'].map(function (k) { return '<option value="' + k + '"' + (S.kind === k ? ' selected' : '') + '>' + (k === 'All' ? 'All types' : k) + '</option>'; }).join('') + '</select></div>') + '<div style="flex:1 1 240px"><label for="q" class="sr">Search</label><input id="q" class="inp" type="search" placeholder="Search group, meeting or location" value="' + esc(S.query) + '" data-model="query" data-rerender="1"></div></div>';
+      '</div>' + (S.site !== 'ETSI' ? '' : '<div><label for="kd" class="sr">Type</label><select id="kd" class="inp" data-model="kind" data-rerender="1" style="min-width:190px">' + ['All', 'Meeting group', 'Event group', 'Standalone meeting'].map(function (k) { return '<option value="' + k + '"' + (S.kind === k ? ' selected' : '') + '>' + (k === 'All' ? 'All types' : k) + '</option>'; }).join('') + '</select></div><div><label for="rg" class="sr">Registration</label><select id="rg" class="inp" data-model="eReg" data-rerender="1" style="min-width:170px"><option value="All"' + (S.eReg === 'All' ? ' selected' : '') + '>All meetings</option><option value="Registered"' + (S.eReg === 'Registered' ? ' selected' : '') + '>I am registered</option></select></div>') + '<div style="flex:1 1 240px"><label for="q" class="sr">Search</label><input id="q" class="inp" type="search" placeholder="Search group, meeting or location" value="' + esc(S.query) + '" data-model="query" data-rerender="1"></div></div>';
     h += '<div class="card" style="overflow:hidden"><div class="scroll"><div style="min-width:' + (S.site === 'ETSI' ? 1200 : 1080) + 'px"><div class="thead glist' + (S.site === 'ETSI' ? ' ge' : '') + '" style="border-bottom:0;padding-bottom:0"><span style="grid-column:1/6"></span><span class="gl" style="grid-column:6/8">Registered</span><span class="gl" style="grid-column:8/10">Attended</span></div><div class="thead glist' + (S.site === 'ETSI' ? ' ge' : '') + '" style="padding-top:6px"><span>Title</span><span>Dates</span><span>City</span><span>Country</span><span style="text-align:right">Meetings</span><span style="justify-self:end">' + tip('f2f', 'Registered face to face') + '</span><span style="justify-self:end">' + tip('on', 'Registered online') + '</span><span style="justify-self:end">' + tip('f2f', 'Attended face to face') + '</span><span style="justify-self:end">' + tip('on', 'Attended online') + '</span><span>Status</span><span></span></div>';
     gs.forEach(function (g) {
       var ge = S.site === 'ETSI', gk = g.kind === 'Standalone meeting' ? 'meeting' : g.kind === 'Event group' ? 'event group' : 'meeting group';
@@ -407,6 +430,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     var list = all.filter(function (m) {
       if (S.mGroup !== 'All' && m.body !== S.mGroup) return false;
       if (S.mLoc !== 'All' && m.location !== S.mLoc) return false;
+      if (S.site === 'ETSI' && S.mReg === 'Registered' && !S.myReg[m.id]) return false;
       if (S.mPeriod === 'ended') { if (m.end >= today) return false; }
       else if (m.end < today || m.start > plus(LIM[S.mPeriod])) return false;
       if (q && (m.ref + ' ' + m.body + ' ' + m.location + ' ' + m.gtitle).toLowerCase().indexOf(q) < 0) return false;
@@ -450,15 +474,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
       var shown = S.myAll ? mine : mine.slice(0, 1);
       if (mine.length) {
         h += '<section aria-label="My registrations" style="display:flex;flex-direction:column;gap:10px"><h2 style="font-size:18px;font-weight:600">Top ' + shown.length + ' upcoming meeting' + (shown.length === 1 ? '' : 's') + ' for which I am registered' + (mine.length > 1 ? ' (<a href="#" data-act="myAll">' + (S.myAll ? 'Show less' : 'Show all') + '</a>)' : '') + '</h2>';
-        shown.forEach(function (x) {
-          var on = x.start <= today, mk = 'my:' + x.id;
-          h += '<div class="card" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;padding:12px 18px;background:var(--ps);border-color:transparent"><span style="flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:2px"><span class="ell" style="font-size:15px;font-weight:700">' + esc(x.ref) + '</span><span class="muted ell" style="font-size:13px">' + esc(x.body) + (x.gtitle ? ' · ' + esc(x.gtitle) : ' · Standalone') + '</span></span>' +
-            '<span style="flex:0 1 190px;display:flex;flex-direction:column;gap:4px"><span style="font-size:14px">' + range(x.start, x.end) + '</span><span class="pill" style="align-self:flex-start;font-size:11px;padding:2px 8px;' + (on ? 'background:#FCF1E6;color:#8A4510' : 'background:#E3ECF8;color:#1D4E89') + '">' + (on ? 'Ongoing' : 'Upcoming') + '</span></span>' +
-            '<span style="flex:0 1 190px" class="muted">' + esc(x.location) + '</span>' +
-            '<span style="flex:0 1 170px"><span class="pill" style="background:#fff;color:var(--pd);border:1px solid var(--p)">Registered · ' + esc(S.myReg[x.id]) + '</span></span>' +
-            '<span style="display:flex;justify-content:flex-end;gap:2px;margin-left:auto">' + ib(ICX.c, 'Contribute to ' + esc(x.ref), 'noop', 'Contribution') + ib(ICX.reg, 'Update my registration to ' + esc(x.ref), 'regMeeting', x.id) +
-            '<div data-menu style="position:relative">' + ib(ICX.more, 'More actions for ' + esc(x.ref), 'rowMenu', mk) + (S.rowMenu === mk ? '<div class="pm" role="menu" style="position:fixed;min-width:210px;top:' + S.rowPos.top + 'px;right:' + S.rowPos.right + 'px">' + [['Documents', 'noop', 'Documents'], ['Contribute', 'noop', 'Contribution'], ['Cancel my registration', 'noop', 'Cancel registration']].map(function (i) { return '<button role="menuitem" data-act="' + i[1] + '" data-arg="' + esc(i[2]) + '">' + i[0] + '</button>'; }).join('') + '</div>' : '') + '</div></span></div>';
-        });
+        shown.forEach(function (x) { h += myCard({ ref: x.ref, sub: x.body + (x.gtitle ? ' · ' + x.gtitle : ' · Standalone'), start: x.start, end: x.end, location: x.location, regText: 'Registered · ' + S.myReg[x.id], regId: x.id, mk: 'my:' + x.id }, today); });
         h += '</section>';
       }
     }
@@ -467,6 +483,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
       '<div class="field"><span style="font-size:13px;font-weight:600;color:#3A4334">Display period</span><div class="segs" role="group" aria-label="Display period">' +
       [['ended', 'Ended'], ['1m', '1 month'], ['6m', '6 months'], ['1y', '1 year']].map(function (p) { return '<button class="seg' + (S.mPeriod === p[0] ? ' on' : '') + '" data-act="mperiod" data-arg="' + p[0] + '">' + p[1] + '</button>'; }).join('') + '</div></div>' +
       sel2('ml', 'Location', opt(locs, S.mLoc), 'mLoc') +
+      (S.site === 'ETSI' ? sel2('mr', 'Registration', '<option value="All"' + (S.mReg === 'All' ? ' selected' : '') + '>All meetings</option><option value="Registered"' + (S.mReg === 'Registered' ? ' selected' : '') + '>I am registered</option>', 'mReg') : '') +
       sel2('ms', 'Sort by', '<option value="date"' + (S.mSort === 'date' ? ' selected' : '') + '>Date</option><option value="name"' + (S.mSort === 'name' ? ' selected' : '') + '>Meeting</option><option value="location"' + (S.mSort === 'location' ? ' selected' : '') + '>Location</option>', 'mSort') +
       sel2('mo', 'Order', '<option value="asc"' + (S.mOrder === 'asc' ? ' selected' : '') + '>Ascending</option><option value="desc"' + (S.mOrder === 'desc' ? ' selected' : '') + '>Descending</option>', 'mOrder') +
       '<div class="field" style="flex:1 1 140px"><label for="mq">Search</label><input id="mq" class="inp" type="search" placeholder="Meeting, body or location" value="' + esc(S.mQuery) + '" data-model="mQuery" data-rerender="1"></div>' +
@@ -730,7 +747,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
   var A = {
     mpage: function (n) { S.mPage = Number(n); },
     mperiod: function (p) { S.mPeriod = p; S.mPage = 1; },
-    mreset: function () { S.mGroup = 'All'; S.mLoc = 'All'; S.mPeriod = '1y'; S.mSort = 'date'; S.mOrder = 'asc'; S.mQuery = ''; S.mPage = 1; },
+    mreset: function () { S.mReg = 'All'; S.mGroup = 'All'; S.mLoc = 'All'; S.mPeriod = '1y'; S.mSort = 'date'; S.mOrder = 'asc'; S.mQuery = ''; S.mPage = 1; },
     mtoggle: function (id) { S.mOpen[id] = !S.mOpen[id]; },
     newMeeting: function () { S.newType = 'standalone'; S.view = 'new'; },
     exportMtg: function () { flash('meetings_list.xlsx exported (' + mtgInfo.length + ' meetings).'); return true; },
@@ -781,6 +798,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
       flash(f.m.ref + ' linked to ' + g.title + '.'); S.view = 'detail'; S.selId = g.id; return true;
     },
     myAll: function () { S.myAll = !S.myAll; },
+    myAllE: function () { S.myAllE = !S.myAllE; },
     toggleMenu: function () { S.menuOpen = !S.menuOpen; },
     rowMenu: function (id) { S.rowMenu = S.rowMenu === id ? null : id; },
     role: function (r) { S.role = r; S.menuOpen = false; if (['detail', 'new', 'mform'].indexOf(S.view) >= 0 && r === 'participant') S.view = 'list'; },
@@ -854,7 +872,7 @@ button.chip{cursor:pointer}button.chip:hover{background:var(--ps);color:var(--pd
     if (!k) return;
     S[k] = e.target.value;
     if (k.charAt(0) === 'm' && k !== 'mPage') S.mPage = 1;
-    if (k === 'ePer' || k === 'query' || k === 'kind') S.ePage = 1;
+    if (k === 'ePer' || k === 'query' || k === 'kind' || k === 'eReg') S.ePage = 1;
     if (e.target.hasAttribute('data-rerender')) render();
   });
   window.addEventListener('scroll', function () { if (S.rowMenu) { S.rowMenu = null; render(); } }, true);
